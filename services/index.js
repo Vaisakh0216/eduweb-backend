@@ -1,0 +1,15 @@
+module.exports = {
+  authService: require('./auth.service'),
+  userService: require('./user.service'),
+  branchService: require('./branch.service'),
+  collegeService: require('./college.service'),
+  courseService: require('./course.service'),
+  agentService: require('./agent.service'),
+  admissionService: require('./admission.service'),
+  paymentService: require('./payment.service'),
+  agentPaymentService: require('./agentPayment.service'),
+  voucherService: require('./voucher.service'),
+  daybookService: require('./daybook.service'),
+  cashbookService: require('./cashbook.service'),
+  dashboardService: require('./dashboard.service'),
+};

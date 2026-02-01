@@ -1,0 +1,15 @@
+module.exports = {
+  authController: require('./auth.controller'),
+  userController: require('./user.controller'),
+  branchController: require('./branch.controller'),
+  collegeController: require('./college.controller'),
+  courseController: require('./course.controller'),
+  agentController: require('./agent.controller'),
+  admissionController: require('./admission.controller'),
+  paymentController: require('./payment.controller'),
+  agentPaymentController: require('./agentPayment.controller'),
+  voucherController: require('./voucher.controller'),
+  daybookController: require('./daybook.controller'),
+  cashbookController: require('./cashbook.controller'),
+  dashboardController: require('./dashboard.controller'),
+};

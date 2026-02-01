@@ -1,0 +1,963 @@
+2026-01-31 04:48:01 [INFO]: MongoDB Connected: localhost
+2026-01-31 04:48:01 [INFO]: Server running in development mode on port 5001
+2026-01-31 04:51:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 04:51:34 [ERROR]: 401 - The user belonging to this token no longer exists. - /api/auth/profile - GET - ::1
+2026-01-31 04:51:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 04:51:34 [ERROR]: 401 - The user belonging to this token no longer exists. - /api/auth/profile - GET - ::1
+2026-01-31 04:51:34 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 04:51:34 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 04:51:34 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-01-31 04:51:34 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-01-31 04:51:59 [INFO]: POST /api/auth/login - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:51:59 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:52:20 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:54:05 [INFO]: DELETE /api/admissions/697d3c10058581f44fc36c75 - ::1
+2026-01-31 04:54:05 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:54:06 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:06 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 04:54:06 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:06 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:08 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:10 [INFO]: DELETE /api/daybook/697d37146bbf653d01953496 - ::1
+2026-01-31 04:54:10 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:10 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:12 [INFO]: DELETE /api/daybook/697d369b6bbf653d019533b0 - ::1
+2026-01-31 04:54:12 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:12 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:54:13 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:54:15 [INFO]: DELETE /api/cashbook/clear - ::1
+2026-01-31 04:54:17 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:54:17 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:54:19 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 04:54:20 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 04:54:21 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 04:54:21 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:22 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 04:54:23 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:23 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 04:54:23 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:23 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:24 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-01-31 04:54:29 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-01-31 04:55:02 [INFO]: GET /api/courses/college/697d3c10058581f44fc36c6a - ::1
+2026-01-31 04:55:15 [INFO]: POST /api/admissions - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:55:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:55:20 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:55:20 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:55:23 [INFO]: POST /api/admissions/697d3ddb9f5ba50cdf105549/recalculate - ::1
+2026-01-31 04:55:23 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:55:36 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:56:00 [INFO]: GET /api/payments/check-ref?transactionRef=001 - ::1
+2026-01-31 04:56:03 [INFO]: GET /api/payments/check-ref?transactionRef=001 - ::1
+2026-01-31 04:56:03 [INFO]: POST /api/payments - ::1
+2026-01-31 04:56:03 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:56:12 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:56:28 [INFO]: GET /api/payments/check-ref?transactionRef=002 - ::1
+2026-01-31 04:56:29 [INFO]: GET /api/payments/check-ref?transactionRef=002 - ::1
+2026-01-31 04:56:29 [INFO]: POST /api/payments - ::1
+2026-01-31 04:56:29 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:57:03 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:57:13 [INFO]: GET /api/payments/check-ref?transactionRef=002 - ::1
+2026-01-31 04:57:18 [INFO]: GET /api/payments/check-ref?transactionRef=003 - ::1
+2026-01-31 04:57:18 [INFO]: GET /api/payments/check-ref?transactionRef=003 - ::1
+2026-01-31 04:57:18 [INFO]: POST /api/payments - ::1
+2026-01-31 04:57:18 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:44 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:57:52 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:54 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:57:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:57 [INFO]: GET /api/vouchers?page=1&limit=10 - ::1
+2026-01-31 04:57:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:57 [INFO]: GET /api/vouchers?page=1&limit=10 - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:57:58 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:58:01 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:58:04 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:58:04 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:58:07 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:58:24 [INFO]: GET /api/payments/check-ref?transactionRef=004 - ::1
+2026-01-31 04:58:28 [INFO]: GET /api/payments/check-ref?transactionRef=004 - ::1
+2026-01-31 04:58:28 [INFO]: POST /api/payments - ::1
+2026-01-31 04:58:28 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 04:58:39 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:48 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/agents/active - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:49 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 04:58:52 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 04:58:52 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 04:58:53 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 04:58:58 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 04:59:57 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 04:59:58 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:59:58 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 04:59:59 [INFO]: POST /api/admissions/697d3ddb9f5ba50cdf105549/recalculate - ::1
+2026-01-31 04:59:59 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:00:07 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:00:36 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:00:51 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:01:06 [INFO]: POST /api/daybook - ::1
+2026-01-31 05:01:06 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:01:06 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:01:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:01:31 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:31 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 05:01:31 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:31 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:01:39 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:01:56 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:02:00 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:04:33 [INFO]: GET /api/cashbook?page=1&limit=10&branchId=697d3c0f058581f44fc36c51 - ::1
+2026-01-31 05:04:33 [INFO]: GET /api/cashbook/summary?branchId=697d3c0f058581f44fc36c51 - ::1
+2026-01-31 05:04:41 [INFO]: GET /api/cashbook?page=1&limit=10&branchId=697d3c0f058581f44fc36c53 - ::1
+2026-01-31 05:04:41 [INFO]: GET /api/cashbook/summary?branchId=697d3c0f058581f44fc36c53 - ::1
+2026-01-31 05:04:47 [INFO]: GET /api/cashbook?page=1&limit=10&branchId=697d3c0f058581f44fc36c52 - ::1
+2026-01-31 05:04:47 [INFO]: GET /api/cashbook/summary?branchId=697d3c0f058581f44fc36c52 - ::1
+2026-01-31 05:04:51 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:04:51 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:34 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:34 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-01-31 05:08:34 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 05:08:34 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:34 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:38 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:40 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:40 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 05:08:40 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 05:08:41 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:41 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 05:08:41 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 05:08:47 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 05:08:47 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 05:08:48 [INFO]: POST /api/admissions/697d3ddb9f5ba50cdf105549/recalculate - ::1
+2026-01-31 05:08:48 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:53 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:08:56 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:08:57 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:10 [INFO]: MongoDB Connected: localhost
+2026-01-31 05:09:10 [INFO]: Server running in development mode on port 5001
+2026-01-31 05:09:13 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:13 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:16 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 05:09:20 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:23 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:09:24 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/branches/active - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 05:09:37 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 05:24:55 [WARN]: MongoDB disconnected
+2026-01-31 05:54:56 [WARN]: MongoDB disconnected
+2026-01-31 06:27:26 [WARN]: MongoDB disconnected
+2026-01-31 06:43:09 [WARN]: MongoDB disconnected
+2026-01-31 06:58:30 [WARN]: MongoDB disconnected
+2026-01-31 07:26:56 [WARN]: MongoDB disconnected
+2026-01-31 08:01:14 [WARN]: MongoDB disconnected
+2026-01-31 08:27:53 [WARN]: MongoDB disconnected
+2026-01-31 08:58:11 [WARN]: MongoDB disconnected
+2026-01-31 09:12:36 [WARN]: MongoDB disconnected
+2026-01-31 09:44:29 [WARN]: MongoDB disconnected
+2026-01-31 10:13:36 [WARN]: MongoDB disconnected
+2026-01-31 10:30:20 [WARN]: MongoDB disconnected
+2026-01-31 11:05:34 [WARN]: MongoDB disconnected
+2026-01-31 11:30:48 [WARN]: MongoDB disconnected
+2026-01-31 12:03:08 [WARN]: MongoDB disconnected
+2026-01-31 12:33:41 [WARN]: MongoDB disconnected
+2026-01-31 13:07:36 [WARN]: MongoDB disconnected
+2026-01-31 13:20:44 [WARN]: MongoDB disconnected
+2026-01-31 13:30:20 [WARN]: MongoDB disconnected
+2026-01-31 13:37:31 [WARN]: MongoDB disconnected
+2026-01-31 13:56:18 [WARN]: MongoDB disconnected
+2026-01-31 14:02:38 [WARN]: MongoDB disconnected
+2026-01-31 14:17:36 [WARN]: MongoDB disconnected
+2026-01-31 14:41:47 [WARN]: MongoDB disconnected
+2026-01-31 14:49:48 [WARN]: MongoDB disconnected
+2026-01-31 15:09:58 [WARN]: MongoDB disconnected
+2026-01-31 15:36:02 [WARN]: MongoDB disconnected
+2026-01-31 16:09:32 [WARN]: MongoDB disconnected
+2026-01-31 16:36:11 [WARN]: MongoDB disconnected
+2026-01-31 17:11:37 [WARN]: MongoDB disconnected
+2026-01-31 17:36:03 [WARN]: MongoDB disconnected
+2026-01-31 18:06:44 [WARN]: MongoDB disconnected
+2026-01-31 18:38:04 [WARN]: MongoDB disconnected
+2026-01-31 18:56:57 [WARN]: MongoDB disconnected
+2026-01-31 19:22:37 [WARN]: MongoDB disconnected
+2026-01-31 19:36:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:15 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:15 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:36:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:19 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:36:20 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:36:20 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:36:29 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:38:48 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 19:38:49 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:38:49 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:38:53 [INFO]: GET /api/agents/active - ::1
+2026-01-31 19:39:07 [INFO]: POST /api/payments - ::1
+2026-01-31 19:39:07 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:39:09 [INFO]: GET /api/payments/697e0d03b4ccd8e236c11ff1/attachment - ::1
+2026-01-31 19:39:09 [ERROR]: 401 - You are not logged in. Please log in to get access. - /api/payments/697e0d03b4ccd8e236c11ff1/attachment - GET - ::1
+2026-01-31 19:39:47 [INFO]: MongoDB Connected: localhost
+2026-01-31 19:39:47 [INFO]: Server running in development mode on port 5001
+2026-01-31 19:39:53 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 19:39:53 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 19:39:53 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:39:53 [INFO]: GET /api/admissions/697d3ddb9f5ba50cdf105549/details - ::1
+2026-01-31 19:39:55 [INFO]: GET /api/payments/697e0d03b4ccd8e236c11ff1/attachment - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:39:59 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/branches/active - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 19:50:17 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:05:49 [WARN]: MongoDB disconnected
+2026-01-31 20:39:11 [WARN]: MongoDB disconnected
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:49:54 [ERROR]: 401 - Your token has expired. Please log in again. - /api/payments?page=1&limit=10 - GET - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:49:54 [ERROR]: 401 - Your token has expired. Please log in again. - /api/payments?page=1&limit=10 - GET - ::1
+2026-01-31 20:49:54 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 20:49:54 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 20:49:54 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 20:49:54 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:54 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:49:55 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:50:10 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:50:11 [INFO]: DELETE /api/admissions/697d3ddb9f5ba50cdf105549 - ::1
+2026-01-31 20:50:11 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:50:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:13 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:13 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:13 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:15 [INFO]: DELETE /api/payments/697e0d03b4ccd8e236c11ff1 - ::1
+2026-01-31 20:50:15 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:17 [INFO]: DELETE /api/payments/697d3e9c9f5ba50cdf1056e5 - ::1
+2026-01-31 20:50:17 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:21 [INFO]: DELETE /api/payments/697d3e569f5ba50cdf1055f9 - ::1
+2026-01-31 20:50:21 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:23 [INFO]: DELETE /api/payments/697d3e259f5ba50cdf1055ce - ::1
+2026-01-31 20:50:23 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:25 [INFO]: DELETE /api/payments/697d3e0b9f5ba50cdf1055a2 - ::1
+2026-01-31 20:50:25 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/agents/active - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/agents/active - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:26 [INFO]: GET /api/agent-payments?page=1&limit=10 - ::1
+2026-01-31 20:50:27 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 20:50:27 [INFO]: GET /api/agents?page=1&limit=10 - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:50:28 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:31 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:35 [INFO]: DELETE /api/daybook/697e0d03b4ccd8e236c11ff8 - ::1
+2026-01-31 20:50:35 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:35 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:37 [INFO]: DELETE /api/daybook/697d3f3a9f5ba50cdf10584c - ::1
+2026-01-31 20:50:37 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:37 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:38 [INFO]: DELETE /api/daybook/697d3e9c9f5ba50cdf1056ec - ::1
+2026-01-31 20:50:39 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:39 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:41 [INFO]: DELETE /api/daybook/697d3e569f5ba50cdf105600 - ::1
+2026-01-31 20:50:41 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:41 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:43 [INFO]: DELETE /api/daybook/697d3e0b9f5ba50cdf1055a9 - ::1
+2026-01-31 20:50:43 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-01-31 20:50:43 [INFO]: GET /api/daybook/summary - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 20:50:45 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 20:50:48 [INFO]: DELETE /api/cashbook/clear - ::1
+2026-01-31 20:50:49 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-01-31 20:50:49 [INFO]: GET /api/cashbook/summary - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:52:30 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 20:54:44 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/branches/active - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 20:55:52 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:01:37 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:01:37 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:01:50 [INFO]: PUT /api/colleges/697d3c10058581f44fc36c6a - ::1
+2026-01-31 21:01:50 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:02:44 [INFO]: PUT /api/colleges/697d3c10058581f44fc36c6a - ::1
+2026-01-31 21:02:44 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:03:09 [INFO]: PUT /api/colleges/697d3c10058581f44fc36c68 - ::1
+2026-01-31 21:03:09 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:03:46 [INFO]: PUT /api/colleges/697d3c10058581f44fc36c69 - ::1
+2026-01-31 21:03:46 [INFO]: GET /api/colleges?page=1&limit=10 - ::1
+2026-01-31 21:04:04 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:04:04 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 21:04:04 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:04:04 [INFO]: GET /api/courses?page=1&limit=10 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:04:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: POST /api/auth/refresh-token - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:03 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:03 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:11 [INFO]: POST /api/auth/login - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:15:11 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:26 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:15:27 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:15:28 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-01-31 21:15:28 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-01-31 21:15:28 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-01-31 21:15:59 [INFO]: GET /api/courses/college/697d3c10058581f44fc36c6a - ::1
+2026-01-31 21:16:17 [INFO]: POST /api/admissions - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/colleges/active - ::1
+2026-01-31 21:16:17 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-01-31 21:16:19 [INFO]: GET /api/admissions/697e23c94b7a313ab9da0be7/details - ::1
+2026-01-31 21:16:19 [INFO]: GET /api/admissions/697e23c94b7a313ab9da0be7/details - ::1
+2026-01-31 21:16:22 [INFO]: GET /api/agents/active - ::1
+2026-01-31 21:16:53 [INFO]: GET /api/payments/check-ref?transactionRef=562130736547 - ::1
+2026-01-31 21:17:00 [INFO]: GET /api/payments/check-ref?transactionRef=562130736547 - ::1
+2026-01-31 21:17:00 [INFO]: POST /api/payments - ::1
+2026-01-31 21:17:00 [INFO]: GET /api/admissions/697e23c94b7a313ab9da0be7/details - ::1
+2026-01-31 21:17:15 [INFO]: GET /api/agents/active - ::1
+2026-01-31 21:17:22 [INFO]: GET /api/payments/check-ref?transactionRef=525599816670 - ::1
+2026-01-31 21:17:24 [INFO]: GET /api/payments/check-ref?transactionRef=525599816670 - ::1
+2026-01-31 21:17:24 [INFO]: POST /api/payments - ::1
+2026-01-31 21:17:24 [INFO]: GET /api/admissions/697e23c94b7a313ab9da0be7/details - ::1
+2026-01-31 21:17:27 [INFO]: GET /api/agents/active - ::1
+2026-01-31 21:17:41 [INFO]: GET /api/payments/check-ref?transactionRef=538671546968 - ::1
+2026-01-31 21:17:43 [INFO]: GET /api/payments/check-ref?transactionRef=538671546968 - ::1
+2026-01-31 21:17:43 [INFO]: POST /api/payments - ::1
+2026-01-31 21:17:43 [INFO]: GET /api/admissions/697e23c94b7a313ab9da0be7/details - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:17:48 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/auth/profile - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/branches/active - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-01-31 21:28:10 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-01-31 21:44:53 [WARN]: MongoDB disconnected
+2026-01-31 22:18:59 [WARN]: MongoDB disconnected
+2026-01-31 22:38:35 [WARN]: MongoDB disconnected
+2026-01-31 22:58:41 [WARN]: MongoDB disconnected
+2026-01-31 23:23:58 [WARN]: MongoDB disconnected
+2026-01-31 23:55:36 [WARN]: MongoDB disconnected
+2026-02-01 00:24:58 [WARN]: MongoDB disconnected
+2026-02-01 00:57:48 [WARN]: MongoDB disconnected
+2026-02-01 01:25:58 [WARN]: MongoDB disconnected
+2026-02-01 01:59:44 [WARN]: MongoDB disconnected
+2026-02-01 02:26:58 [WARN]: MongoDB disconnected
+2026-02-01 02:44:09 [WARN]: MongoDB disconnected
+2026-02-01 03:19:36 [WARN]: MongoDB disconnected
+2026-02-01 03:45:47 [WARN]: MongoDB disconnected
+2026-02-01 04:19:25 [WARN]: MongoDB disconnected
+2026-02-01 04:45:36 [WARN]: MongoDB disconnected
+2026-02-01 05:18:08 [WARN]: MongoDB disconnected
+2026-02-01 05:45:12 [WARN]: MongoDB disconnected
+2026-02-01 06:18:18 [WARN]: MongoDB disconnected
+2026-02-01 06:33:56 [WARN]: MongoDB disconnected
+2026-02-01 07:05:09 [WARN]: MongoDB disconnected
+2026-02-01 07:31:58 [WARN]: MongoDB disconnected
+2026-02-01 08:03:22 [WARN]: MongoDB disconnected
+2026-02-01 08:32:58 [WARN]: MongoDB disconnected
+2026-02-01 09:04:56 [WARN]: MongoDB disconnected
+2026-02-01 09:33:58 [WARN]: MongoDB disconnected
+2026-02-01 09:40:48 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 09:40:48 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 09:40:48 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 09:40:48 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 09:40:48 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 09:40:48 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 09:40:48 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 09:40:48 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/branches/active - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/branches/active - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 09:40:49 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 09:57:29 [WARN]: MongoDB disconnected
+2026-02-01 10:27:28 [WARN]: MongoDB disconnected
+2026-02-01 10:58:22 [WARN]: MongoDB disconnected
+2026-02-01 10:58:27 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 10:58:27 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 10:58:27 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 10:58:27 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 10:58:27 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/branches/active - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/branches/active - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 10:58:27 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:02:19 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:02:22 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:03:45 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:03:46 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:04:18 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:18:32 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:18:32 [ERROR]: 401 - Your token has expired. Please log in again. - /api/auth/profile - GET - ::1
+2026-02-01 11:18:32 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:18:32 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/auth/profile - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:18:32 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:18:33 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:18:34 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:34 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:18:34 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:34 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:18:38 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:19:08 [INFO]: GET /api/branches?page=1&limit=10 - ::1
+2026-02-01 11:19:08 [INFO]: GET /api/branches?page=1&limit=10 - ::1
+2026-02-01 11:19:09 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:19:09 [INFO]: GET /api/users?page=1&limit=10 - ::1
+2026-02-01 11:19:09 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:19:09 [INFO]: GET /api/users?page=1&limit=10 - ::1
+2026-02-01 11:19:30 [INFO]: PUT /api/users/697d3c0f058581f44fc36c66 - ::1
+2026-02-01 11:19:30 [INFO]: GET /api/users?page=1&limit=10 - ::1
+2026-02-01 11:19:42 [INFO]: POST /api/auth/logout - ::1
+2026-02-01 11:19:57 [INFO]: POST /api/auth/login - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:19:57 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:20:04 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:04 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:20:04 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:04 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:05 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=Sub - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=Main - ::1
+2026-02-01 11:20:06 [INFO]: GET /api/agents/active?agentType=College - ::1
+2026-02-01 11:20:26 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:26 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:20:26 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:26 [INFO]: GET /api/payments?page=1&limit=10 - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/daybook/summary - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/daybook/summary - ::1
+2026-02-01 11:20:28 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/cashbook/summary - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/cashbook?page=1&limit=10 - ::1
+2026-02-01 11:20:29 [INFO]: GET /api/cashbook/summary - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/daybook/summary - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/daybook/summary - ::1
+2026-02-01 11:20:30 [INFO]: GET /api/daybook?page=1&limit=10 - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/colleges/active - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:20:35 [INFO]: GET /api/admissions?page=1&limit=10 - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/stats?year=2026 - GET - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/monthly-trend?year=2026 - GET - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/admission-trend?year=2026 - GET - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/stats?year=2026 - GET - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/monthly-trend?year=2026 - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/admission-trend?year=2026 - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/monthly-trend?year=2026 - GET - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/admission-trend?year=2026 - GET - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-02-01 11:38:16 [INFO]: POST /api/auth/refresh-token - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/branches/active - ::1
+2026-02-01 11:38:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
+2026-02-01 11:38:17 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-02-01 11:38:17 [INFO]: GET /api/branches/active - ::1
