@@ -670,28 +670,38 @@ class PaymentService {
       }
       amountTransferredToConsultancy = data.amount;
 
-      // IMPORTANT: Service Charge is SEPARATE from College Fee
-      // User explicitly chooses whether SC is included in this transfer
-      // "No - Transfer full amount to college" means SC = 0, all goes to college
-      // "Yes - Deduct service charge" means user specifies SC amount
-
-      if (data.deductServiceCharge === true && data.serviceChargeDeducted > 0) {
+      // Check if this transfer is marked as Service Charge payment
+      // If isServiceChargePayment is true, the full amount is SC (not due to college)
+      if (data.isServiceChargePayment === true) {
+        // This transfer is Service Charge - consultancy keeps it all
+        serviceChargeDeducted = data.amount;
+        amountDueToCollege = 0;
+        console.log("=== Agent to Consultancy - SERVICE CHARGE Payment ===");
+        console.log("Amount:", data.amount, "(all SC, nothing due to college)");
+      } else if (
+        data.deductServiceCharge === true &&
+        data.serviceChargeDeducted > 0
+      ) {
+        // Partial SC deduction from transfer
         serviceChargeDeducted = Math.min(
           data.serviceChargeDeducted,
           data.amount
         );
         amountDueToCollege = Math.max(0, data.amount - serviceChargeDeducted);
+        console.log("=== Agent to Consultancy - Partial SC ===");
+        console.log(
+          "SC Deducted:",
+          serviceChargeDeducted,
+          "Due to College:",
+          amountDueToCollege
+        );
       } else {
-        // No SC deduction - full amount goes to college
+        // No SC - full amount goes to college
         serviceChargeDeducted = 0;
         amountDueToCollege = data.amount;
+        console.log("=== Agent to Consultancy - Full to College ===");
+        console.log("Due to College:", amountDueToCollege);
       }
-
-      console.log("=== Agent to Consultancy Payment ===");
-      console.log("Transfer amount:", data.amount);
-      console.log("Deduct SC?:", data.deductServiceCharge);
-      console.log("SC Deducted:", serviceChargeDeducted);
-      console.log("Due to College:", amountDueToCollege);
     }
 
     // Student to Agent - no amount due to college yet (will be calculated when agent transfers)
@@ -802,6 +812,9 @@ class PaymentService {
       } else if (data.payerType === PAYER_TYPES.AGENT) {
         category = "received_from_student";
         description = `Payment from Agent: ${admission.student.firstName} ${admission.student.lastName}`;
+        if (data.isServiceChargePayment) {
+          description += ` (Service Charge)`;
+        }
         if (agentFeeDeducted > 0) {
           description += ` (Agent deducted ₹${agentFeeDeducted} fee)`;
         }
