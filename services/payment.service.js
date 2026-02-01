@@ -152,15 +152,22 @@ class PaymentService {
         totalServiceCharge - agentFee
       );
 
-      // The consultancy's service charge portion is included in the transferred amount
-      // This should be recorded as "deducted from student" (via agent transfer)
-      // because it's part of what the student paid that consultancy is keeping
-      serviceChargeDeducted = Math.min(
-        consultancyServiceChargePortion,
-        data.amount
+      // How much SC has consultancy already received?
+      const alreadyReceivedSC =
+        (admission.serviceCharge?.deductedFromStudent || 0) +
+        (admission.serviceCharge?.receivedFromCollege || 0);
+
+      // Remaining SC consultancy needs to receive
+      const remainingSCToReceive = Math.max(
+        0,
+        consultancyServiceChargePortion - alreadyReceivedSC
       );
 
-      // Amount due to college = transferred amount - consultancy's SC portion
+      // The consultancy's service charge portion from THIS transfer
+      // Can't be more than what's remaining to receive OR the transfer amount
+      serviceChargeDeducted = Math.min(remainingSCToReceive, data.amount);
+
+      // Amount due to college = transferred amount - SC portion for consultancy
       amountDueToCollege = Math.max(0, data.amount - serviceChargeDeducted);
 
       console.log(
