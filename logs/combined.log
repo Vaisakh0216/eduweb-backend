@@ -961,3 +961,32 @@
 2026-02-01 11:38:16 [INFO]: GET /api/dashboard/stats?year=2026 - ::1
 2026-02-01 11:38:17 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
 2026-02-01 11:38:17 [INFO]: GET /api/branches/active - ::1
+2026-02-01 13:52:57 [WARN]: MongoDB disconnected
+2026-02-01 15:08:29 [WARN]: MongoDB disconnected
+2026-02-01 15:40:01 [WARN]: MongoDB disconnected
+2026-02-01 16:01:25 [WARN]: MongoDB disconnected
+2026-02-01 16:33:59 [WARN]: MongoDB disconnected
+2026-02-01 17:08:24 [WARN]: MongoDB disconnected
+2026-02-01 17:39:39 [WARN]: MongoDB disconnected
+2026-02-01 18:08:19 [WARN]: MongoDB disconnected
+2026-02-01 18:33:47 [WARN]: MongoDB disconnected
+2026-02-01 18:53:25 [WARN]: MongoDB disconnected
+2026-02-01 19:18:48 [WARN]: MongoDB disconnected
+2026-02-01 19:26:50 [WARN]: MongoDB disconnected
+2026-02-01 20:05:59 [WARN]: MongoDB disconnected
+2026-02-01 20:17:56 [WARN]: MongoDB disconnected
+2026-02-01 20:51:39 [WARN]: MongoDB disconnected
+2026-02-01 21:13:03 [WARN]: MongoDB disconnected
+2026-02-01 21:29:40 [WARN]: MongoDB disconnected
+2026-02-01 21:49:42 [WARN]: MongoDB disconnected
+2026-02-01 22:03:47 [WARN]: MongoDB disconnected
+2026-02-01 22:55:38 [WARN]: MongoDB disconnected
+2026-02-01 23:19:24 [WARN]: MongoDB disconnected
+2026-02-01 23:27:52 [WARN]: MongoDB disconnected
+2026-02-01 23:59:31 [WARN]: MongoDB disconnected
+2026-02-02 00:33:56 [WARN]: MongoDB disconnected
+2026-02-02 00:43:38 [WARN]: MongoDB disconnected
+2026-02-02 00:44:40 [WARN]: MongoDB disconnected
+2026-02-02 01:00:53 [WARN]: MongoDB disconnected
+2026-02-02 01:33:44 [WARN]: MongoDB disconnected
+2026-02-02 01:50:17 [WARN]: MongoDB disconnected
