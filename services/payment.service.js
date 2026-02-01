@@ -131,44 +131,17 @@ class PaymentService {
       // Amount transferred is what consultancy actually receives
       amountTransferredToConsultancy = data.amount;
 
-      // CORRECT CALCULATION:
-      // When agent transfers amount after deducting fee, the transferred amount CONTAINS
-      // the remaining service charge (consultancy's portion).
-      //
-      // Example:
-      // - Total Service Charge: ₹75,000 (₹40,000 agent + ₹35,000 consultancy)
-      // - Agent deducted: ₹40,000
-      // - Agent transferred: ₹1,15,000
-      // - This ₹1,15,000 contains: ₹35,000 (consultancy SC) + ₹80,000 (college payment)
-      //
-      // So consultancy's service charge portion is automatically received in the transfer!
-      // We need to calculate how much of the transferred amount is the consultancy's SC portion
-
-      const totalServiceCharge = admission.serviceCharge?.agreed || 0;
-      const agentFee =
-        admission.agents?.totalAgentFee || admission.agent?.agentFee || 0;
-      const consultancyServiceChargePortion = Math.max(
-        0,
-        totalServiceCharge - agentFee
-      );
-
-      // How much SC has consultancy already received?
-      const alreadyReceivedSC =
-        (admission.serviceCharge?.deductedFromStudent || 0) +
-        (admission.serviceCharge?.receivedFromCollege || 0);
-
-      // Remaining SC consultancy needs to receive
-      const remainingSCToReceive = Math.max(
-        0,
-        consultancyServiceChargePortion - alreadyReceivedSC
-      );
-
-      // The consultancy's service charge portion from THIS transfer
-      // Can't be more than what's remaining to receive OR the transfer amount
-      serviceChargeDeducted = Math.min(remainingSCToReceive, data.amount);
-
-      // Amount due to college = transferred amount - SC portion for consultancy
-      amountDueToCollege = Math.max(0, data.amount - serviceChargeDeducted);
+      if (data.deductServiceCharge === true && data.serviceChargeDeducted > 0) {
+        serviceChargeDeducted = Math.min(
+          data.serviceChargeDeducted,
+          data.amount
+        );
+        amountDueToCollege = Math.max(0, data.amount - serviceChargeDeducted);
+      } else {
+        // No SC deduction - full amount goes to college
+        serviceChargeDeducted = 0;
+        amountDueToCollege = data.amount;
+      }
 
       console.log(
         "Agent to Consultancy - Total SC:",
@@ -377,55 +350,6 @@ class PaymentService {
           branchId: data.branchId,
           category: "paid_to_college",
           description: `Cash paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
-          credited: 0,
-          debited: data.amount,
-          runningBalance,
-          voucherId: voucher._id,
-          createdBy,
-        });
-      }
-    }
-
-    // Handle Consultancy paying to Agent (agent commission/fee payment)
-    if (
-      data.payerType === PAYER_TYPES.CONSULTANCY &&
-      data.receiverType === RECEIVER_TYPES.AGENT
-    ) {
-      // Get agent name for description
-      const Agent = require("../models/Agent");
-      let agentName = "Agent";
-      if (paidToAgentId) {
-        const agent = await Agent.findById(paidToAgentId);
-        if (agent) agentName = agent.name;
-      }
-
-      // Create daybook entry as EXPENSE - money going out from consultancy
-      await Daybook.create({
-        date: payment.paymentDate,
-        branchId: data.branchId,
-        category: "paid_to_agent",
-        type: DAYBOOK_TYPES.EXPENSE,
-        amount: data.amount,
-        description: `Agent fee paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
-        admissionId: data.admissionId,
-        paymentId: payment._id,
-        voucherId: voucher._id,
-        createdBy,
-      });
-
-      // Update cashbook if cash payment
-      if (data.paymentMode === "Cash") {
-        const lastEntry = await Cashbook.findOne({
-          branchId: data.branchId,
-        }).sort({ date: -1, createdAt: -1 });
-
-        const runningBalance = (lastEntry?.runningBalance || 0) - data.amount;
-
-        await Cashbook.create({
-          date: payment.paymentDate,
-          branchId: data.branchId,
-          category: "paid_to_agent",
-          description: `Cash paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
           credited: 0,
           debited: data.amount,
           runningBalance,
