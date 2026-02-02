@@ -605,7 +605,6 @@ class PaymentService {
     const isStudentToConsultancy =
       data.payerType === PAYER_TYPES.STUDENT &&
       data.receiverType === RECEIVER_TYPES.CONSULTANCY &&
-      !data.isServiceChargePayment &&
       !data.isAgentCollection;
 
     // Agent Collection Flow: Agent collects from student and transfers to consultancy
@@ -634,8 +633,15 @@ class PaymentService {
     );
 
     if (isStudentToConsultancy) {
-      // Only deduct if explicitly enabled (deductServiceCharge must be true)
-      if (data.deductServiceCharge === true) {
+      // Check if this is marked as Service Charge Only payment
+      if (data.isServiceChargePayment === true) {
+        // Full amount is Service Charge - consultancy keeps it all
+        serviceChargeDeducted = data.amount;
+        amountDueToCollege = 0;
+        console.log("=== Student to Consultancy - SERVICE CHARGE ONLY ===");
+        console.log("Amount:", data.amount, "(all SC, nothing due to college)");
+      } else if (data.deductServiceCharge === true) {
+        // Partial SC deduction (Mixed option)
         const serviceChargeDue = admission.serviceCharge?.due || 0;
         console.log("Service charge due:", serviceChargeDue);
 
@@ -653,13 +659,21 @@ class PaymentService {
             serviceChargeDeducted = Math.min(serviceChargeDue, data.amount);
           }
         }
-        console.log("Service charge to deduct:", serviceChargeDeducted);
+        amountDueToCollege = data.amount - serviceChargeDeducted;
+        console.log("=== Student to Consultancy - MIXED ===");
+        console.log(
+          "SC Deducted:",
+          serviceChargeDeducted,
+          "Due to College:",
+          amountDueToCollege
+        );
       } else {
-        console.log("Deduction NOT enabled - serviceChargeDeducted will be 0");
+        // No SC - full amount goes to college (College Fee Only option)
+        serviceChargeDeducted = 0;
+        amountDueToCollege = data.amount;
+        console.log("=== Student to Consultancy - COLLEGE FEE ONLY ===");
+        console.log("Due to College:", amountDueToCollege);
       }
-
-      amountDueToCollege = data.amount - serviceChargeDeducted;
-      console.log("Amount due to college:", amountDueToCollege);
     }
 
     // Handle Agent collection flow - Agent transfers to Consultancy
