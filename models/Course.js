@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Course name is required'],
+      required: [true, "Course name is required"],
       trim: true,
     },
     code: {
@@ -13,8 +13,8 @@ const courseSchema = new mongoose.Schema(
     },
     collegeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'College',
-      required: [true, 'College is required'],
+      ref: "College",
+      // required: [true, 'College is required'],
     },
     duration: {
       years: {
@@ -53,15 +53,15 @@ const courseSchema = new mongoose.Schema(
     deletedAt: Date,
     deletedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     updatedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
   },
   {
@@ -69,7 +69,7 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-courseSchema.index({ name: 'text' });
+courseSchema.index({ name: "text" });
 courseSchema.index({ collegeId: 1 });
 courseSchema.index({ isActive: 1, isDeleted: 1 });
 
@@ -80,4 +80,4 @@ courseSchema.pre(/^find/, function (next) {
   next();
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = mongoose.model("Course", courseSchema);

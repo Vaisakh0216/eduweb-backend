@@ -1,4 +1,4 @@
-const { z } = require('zod');
+const { z } = require("zod");
 
 const durationSchema = z.object({
   years: z.number().min(1).max(10).optional().default(4),
@@ -13,9 +13,10 @@ const feesSchema = z.object({
 });
 
 const createCourseSchema = z.object({
-  name: z.string().min(1, 'Course name is required').max(200),
+  name: z.string().min(1, "Course name is required").max(200),
   code: z.string().max(20).optional(),
-  collegeId: z.string().min(1, 'College is required'),
+  // collegeId: z.string().min(1, 'College is required'),
+  collegeId: z.string().min(1).optional(),
   duration: durationSchema.optional(),
   degree: z.string().optional(),
   specialization: z.string().optional(),
