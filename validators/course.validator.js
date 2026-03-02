@@ -15,8 +15,7 @@ const feesSchema = z.object({
 const createCourseSchema = z.object({
   name: z.string().min(1, "Course name is required").max(200),
   code: z.string().max(20).optional(),
-  // collegeId: z.string().min(1, 'College is required'),
-  collegeId: z.string().min(1).optional(),
+  collegeId: z.preprocess(val => (val === "" ? undefined : val), z.string().optional()),
   duration: durationSchema.optional(),
   degree: z.string().optional(),
   specialization: z.string().optional(),
