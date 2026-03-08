@@ -88,6 +88,19 @@ module.exports = {
     'misc',
   ],
 
+  DAYBOOK_CATEGORIES_CONFIG: {
+    electricity_bill: { type: 'expense' },
+    water_bill: { type: 'expense' },
+    office_rent: { type: 'expense' },
+    salary: { type: 'expense' },
+    paid_to_college: { type: 'expense' },
+    paid_to_agent: { type: 'expense' },
+    received_from_student: { type: 'income' },
+    received_from_college_service_charge: { type: 'income' },
+    service_charge_income: { type: 'income' },
+    misc: { type: 'expense' },
+  },
+
   PAGINATION: {
     DEFAULT_PAGE: 1,
     DEFAULT_LIMIT: 10,

@@ -394,20 +394,8 @@ admissionSchema.pre('save', async function (next) {
 admissionSchema.pre('save', function (next) {
   const fees = this.fees;
   fees.totalFee =
-    (fees.offeredFee || 0) +
     (fees.admissionFee || 0) +
-    (fees.tuitionFeeYear1 || 0) +
-    (fees.tuitionFeeYear2 || 0) +
-    (fees.tuitionFeeYear3 || 0) +
-    (fees.tuitionFeeYear4 || 0);
-
-  if (fees.hostelIncluded) {
-    fees.totalFee +=
-      (fees.hostelFeeYear1 || 0) +
-      (fees.hostelFeeYear2 || 0) +
-      (fees.hostelFeeYear3 || 0) +
-      (fees.hostelFeeYear4 || 0);
-  }
+    (fees.tuitionFeeYear1 || 0);
 
   // Calculate service charge totals
   // Total received = from college + deducted from student + deducted by agent - paid back to college
