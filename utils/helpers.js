@@ -1,4 +1,5 @@
 const { PAGINATION } = require('./constants');
+const Counter = require('../models/Counter');
 
 /**
  * Generate pagination options
@@ -33,23 +34,43 @@ const formatPaginationResponse = (data, total, page, limit) => {
 };
 
 /**
- * Generate voucher number
+ * Generate voucher number atomically.
+ * Always syncs the counter to the current max existing voucher first
+ * (using $max, which is idempotent and safe under concurrency), then
+ * atomically increments so every caller gets a unique sequence number.
  */
-const generateVoucherNumber = async (branchCode, VoucherModel) => {
+const generateVoucherNumber = async (branchCode) => {
   const year = new Date().getFullYear();
+  const counterId = `voucher_${branchCode}_${year}`;
   const prefix = `${branchCode}-${year}`;
-  
-  const lastVoucher = await VoucherModel.findOne({
+
+  // Read the highest existing voucher sequence for this prefix.
+  // Must include deleted vouchers — they still occupy slots in the unique index.
+  const Voucher = require('../models/Voucher');
+  const lastVoucher = await Voucher.findOne({
     voucherNo: new RegExp(`^${prefix}`),
-  }).sort({ voucherNo: -1 });
-  
-  let sequence = 1;
-  if (lastVoucher) {
-    const lastSeq = parseInt(lastVoucher.voucherNo.split('-').pop());
-    sequence = lastSeq + 1;
-  }
-  
-  return `${prefix}-${String(sequence).padStart(6, '0')}`;
+  }).setOptions({ includeDeleted: true }).sort({ voucherNo: -1 });
+
+  const maxExistingSeq = lastVoucher
+    ? parseInt(lastVoucher.voucherNo.split('-').pop(), 10)
+    : 0;
+
+  // Bump the counter up to maxExistingSeq if it's lagging (handles stale counters)
+  // $max is idempotent — safe for concurrent calls
+  await Counter.findOneAndUpdate(
+    { _id: counterId },
+    { $max: { seq: maxExistingSeq } },
+    { upsert: true }
+  );
+
+  // Atomically get the next unique sequence number
+  const counter = await Counter.findOneAndUpdate(
+    { _id: counterId },
+    { $inc: { seq: 1 } },
+    { new: true }
+  );
+
+  return `${prefix}-${String(counter.seq).padStart(6, '0')}`;
 };
 
 /**

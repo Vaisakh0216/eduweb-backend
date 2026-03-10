@@ -205,7 +205,7 @@
 
 //     // Generate voucher
 //     const branch = await Branch.findById(data.branchId);
-//     const voucherNo = await generateVoucherNumber(branch.code, Voucher);
+//     const voucherNo = await generateVoucherNumber(branch.code);
 
 //     // Determine voucher type:
 //     // receipt = money received (income for consultancy)
@@ -767,7 +767,7 @@ class PaymentService {
 
     // Generate voucher
     const branch = await Branch.findById(data.branchId);
-    const voucherNo = await generateVoucherNumber(branch.code, Voucher);
+    const voucherNo = await generateVoucherNumber(branch.code);
 
     // Determine voucher type:
     // receipt = money received (income for consultancy)

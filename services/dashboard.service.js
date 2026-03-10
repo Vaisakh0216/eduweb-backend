@@ -86,9 +86,15 @@ class DashboardService {
         $addFields: {
           computedType: {
             $cond: {
-              if: { $in: ['$category', incomeCategories] },
-              then: 'income',
-              else: 'expense',
+              if: { $ifNull: ['$transactionType', false] },
+              then: '$transactionType',
+              else: {
+                $cond: {
+                  if: { $in: ['$category', incomeCategories] },
+                  then: 'income',
+                  else: 'expense',
+                },
+              },
             },
           },
         },

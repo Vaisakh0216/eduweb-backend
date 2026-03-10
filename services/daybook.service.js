@@ -314,44 +314,71 @@ class DaybookService {
       createdBy: userId,
     });
 
-    // Determine if income or expense based on category
-    const categoryConfig = DAYBOOK_CATEGORIES_CONFIG[data.category];
-    const type = categoryConfig?.type || "expense";
+    // Determine type: prefer explicit transactionType, fallback to category config
+    const type =
+      data.transactionType ||
+      DAYBOOK_CATEGORIES_CONFIG[data.category]?.type ||
+      "expense";
 
-    // Generate voucher number
+    // Generate voucher number with retry on duplicate key race condition
     const branch = await Branch.findById(data.branchId);
-    const voucherNo = await generateVoucherNumber(branch.code, Voucher);
+    if (!branch) throw new Error("Branch not found");
 
-    // Create voucher
-    const voucherType = type === "income" ? "receipt" : "payment";
-    const voucher = await Voucher.create({
-      voucherNo,
-      branchId: data.branchId,
-      voucherType,
-      amount: data.amount,
-      description: data.description || `Daybook entry - ${data.category}`,
-      voucherDate: data.date || new Date(),
-      daybookId: entry._id,
-      createdBy: userId,
-    });
+    let voucher;
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const voucherNo = await generateVoucherNumber(branch.code);
+        const voucherType = type === "income" ? "receipt" : "payment";
+        voucher = await Voucher.create({
+          voucherNo,
+          branchId: data.branchId,
+          voucherType,
+          amount: data.amount,
+          description: data.description || `Daybook entry - ${data.category}`,
+          voucherDate: data.date || new Date(),
+          daybookId: entry._id,
+          createdBy: userId,
+        });
+        break;
+      } catch (err) {
+        if (err.code === 11000 && retries > 1) {
+          retries--;
+        } else {
+          throw err;
+        }
+      }
+    }
 
     // Update daybook with voucher reference
     entry.voucherId = voucher._id;
     await entry.save();
 
-    // Create cashbook entry
-    await Cashbook.create({
-      date: data.date || new Date(),
-      branchId: data.branchId,
-      category: data.category,
-      description: data.description,
-      credited: type === "income" ? data.amount : 0,
-      debited: type === "expense" ? data.amount : 0,
-      remarks: data.remarks,
-      voucherId: voucher._id,
-      daybookId: entry._id,
-      createdBy: userId,
-    });
+    // Only create cashbook entry for Cash / Petty Cash accounts
+    // Bank account affects bank balance (tracked via daybook paymentMode), not cashbook
+    const isCashAccount = !data.account || data.account === "Cash" || data.account === "Petty Cash";
+    if (isCashAccount) {
+      const lastCashEntry = await Cashbook.findOne({ branchId: data.branchId })
+        .sort({ date: -1, createdAt: -1 });
+
+      const credited = type === "income" ? data.amount : 0;
+      const debited = type === "expense" ? data.amount : 0;
+      const runningBalance = (lastCashEntry?.runningBalance || 0) + credited - debited;
+
+      await Cashbook.create({
+        date: data.date || new Date(),
+        branchId: data.branchId,
+        category: data.category,
+        description: data.description,
+        credited,
+        debited,
+        runningBalance,
+        remarks: data.remarks,
+        voucherId: voucher._id,
+        daybookId: entry._id,
+        createdBy: userId,
+      });
+    }
 
     return entry;
   }
@@ -495,14 +522,17 @@ class DaybookService {
     let totalExpense = 0;
 
     entries.forEach((entry) => {
-      const categoryConfig = DAYBOOK_CATEGORIES_CONFIG[entry.category];
-      const type = categoryConfig?.type || "expense";
+      const type =
+        entry.transactionType ||
+        DAYBOOK_CATEGORIES_CONFIG[entry.category]?.type ||
+        "expense";
 
       if (type === "income") {
         totalIncome += entry.amount;
-      } else {
+      } else if (type === "expense") {
         totalExpense += entry.amount;
       }
+      // transfer and asset types are excluded from income/expense totals
     });
 
     return {
@@ -518,7 +548,8 @@ class DaybookService {
     const matchFilter = { isDeleted: false };
 
     if (branchId) {
-      matchFilter.branchId = require("mongoose").Types.ObjectId.createFromHexString(branchId);
+      matchFilter.branchId =
+        require("mongoose").Types.ObjectId.createFromHexString(branchId);
     }
 
     if (startDate || endDate) {
@@ -542,6 +573,34 @@ class DaybookService {
       },
       { $sort: { total: -1 } },
     ]);
+  }
+
+  async clearAll(branchId, deletedBy) {
+    const filter = { isDeleted: false };
+    if (branchId) filter.branchId = branchId;
+
+    const result = await Daybook.updateMany(filter, {
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy,
+    });
+
+    return {
+      deletedCount: result.modifiedCount,
+      message: `${result.modifiedCount} daybook entries cleared successfully`,
+    };
+  }
+
+  async hardClearAll(branchId) {
+    const filter = {};
+    if (branchId) filter.branchId = branchId;
+
+    const result = await Daybook.deleteMany(filter);
+
+    return {
+      deletedCount: result.deletedCount,
+      message: `${result.deletedCount} daybook entries permanently deleted`,
+    };
   }
 
   async addAttachment(id, attachment, userId) {
@@ -612,6 +671,7 @@ class DaybookService {
         Amount: entry.amount,
         Voucher: entry.voucherId?.voucherNo || "",
         Remarks: entry.remarks || "",
+        PaymentMonth: entry.paymentMonth,
       };
     });
   }

@@ -86,6 +86,18 @@ router.put(
 );
 
 router.delete(
+  '/clear',
+  authorize(ROLES.SUPER_ADMIN),
+  daybookController.clearAll
+);
+
+router.delete(
+  '/hard-clear',
+  authorize(ROLES.SUPER_ADMIN),
+  daybookController.hardClearAll
+);
+
+router.delete(
   '/:id',
   authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN),
   daybookController.remove

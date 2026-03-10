@@ -96,7 +96,7 @@
 // module.exports = mongoose.model("Daybook", daybookSchema);
 
 const mongoose = require("mongoose");
-const { DAYBOOK_CATEGORIES } = require("../utils/constants");
+const { DAYBOOK_CATEGORIES, DAYBOOK_TYPES, DAYBOOK_ACCOUNTS } = require("../utils/constants");
 
 const daybookSchema = new mongoose.Schema(
   {
@@ -113,12 +113,22 @@ const daybookSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: DAYBOOK_CATEGORIES,
-      required: [true, "Category is required"],
     },
     amount: {
       type: Number,
       required: [true, "Amount is required"],
       min: [0, "Amount must be positive"],
+    },
+    transactionType: {
+      type: String,
+      enum: Object.values(DAYBOOK_TYPES),
+    },
+    account: {
+      type: String,
+      enum: DAYBOOK_ACCOUNTS,
+    },
+    paymentMonth: {
+      type: String,
     },
     description: String,
     remarks: String,

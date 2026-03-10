@@ -2,14 +2,17 @@ const { z } = require("zod");
 const {
   DAYBOOK_TYPES,
   DAYBOOK_CATEGORIES,
+  DAYBOOK_ACCOUNTS,
   PAYMENT_MODES,
 } = require("../utils/constants");
 
 const createDaybookSchema = z.object({
   date: z.string().or(z.date()).optional(),
   branchId: z.string().min(1, "Branch is required"),
-  category: z.enum(DAYBOOK_CATEGORIES),
-  // type: z.enum(Object.values(DAYBOOK_TYPES)),
+  category: z.preprocess(val => (val === "" ? undefined : val), z.enum(DAYBOOK_CATEGORIES).optional().nullable()),
+  transactionType: z.enum(Object.values(DAYBOOK_TYPES)).optional(),
+  account: z.preprocess(val => (val === "" ? undefined : val), z.enum(DAYBOOK_ACCOUNTS).optional()),
+  paymentMonth: z.string().optional(),
   amount: z.number().min(0, "Amount must be positive"),
   dueAmount: z.number().min(0).optional().default(0),
   description: z.string().optional(),
@@ -20,13 +23,14 @@ const createDaybookSchema = z.object({
   paymentMode: z.enum(PAYMENT_MODES).optional().default("Cash"),
   partyName: z.string().optional(),
   transactionRef: z.string().optional(),
-  date: z.string().or(z.date()).optional(),
 });
 
 const updateDaybookSchema = z.object({
   date: z.string().or(z.date()).optional(),
-  category: z.enum(DAYBOOK_CATEGORIES).optional(),
-  // type: z.enum(Object.values(DAYBOOK_TYPES)).optional(),
+  category: z.preprocess(val => (val === "" ? undefined : val), z.enum(DAYBOOK_CATEGORIES).optional().nullable()),
+  transactionType: z.enum(Object.values(DAYBOOK_TYPES)).optional(),
+  account: z.preprocess(val => (val === "" ? undefined : val), z.enum(DAYBOOK_ACCOUNTS).optional()),
+  paymentMonth: z.string().optional(),
   amount: z.number().min(0).optional(),
   dueAmount: z.number().min(0).optional(),
   description: z.string().optional(),

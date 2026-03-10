@@ -38,7 +38,7 @@ class AgentPaymentService {
 
     // Generate voucher
     const branch = await Branch.findById(data.branchId);
-    const voucherNo = await generateVoucherNumber(branch.code, Voucher);
+    const voucherNo = await generateVoucherNumber(branch.code);
 
     const voucher = await Voucher.create({
       voucherNo,

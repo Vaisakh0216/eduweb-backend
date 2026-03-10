@@ -70,9 +70,13 @@ module.exports = {
     'Cheque',
   ],
 
+  DAYBOOK_ACCOUNTS: ['Cash', 'Bank', 'Petty Cash'],
+
   DAYBOOK_TYPES: {
     INCOME: 'income',
     EXPENSE: 'expense',
+    TRANSFER: 'transfer',
+    ASSET: 'asset',
   },
 
   DAYBOOK_CATEGORIES: [
@@ -86,6 +90,20 @@ module.exports = {
     'received_from_college_service_charge',
     'service_charge_income',
     'misc',
+    'wifi_phone_bill',
+    'recharge',
+    'food_refreshment',
+    'stationery',
+    'printing',
+    'maintenance',
+    'advertisement_marketing',
+    'college_visit',
+    'field_work',
+    'data_collection',
+    'agent_commission',
+    'sub_agent_commission',
+    'donation',
+    'investment',
   ],
 
   DAYBOOK_CATEGORIES_CONFIG: {
@@ -99,6 +117,20 @@ module.exports = {
     received_from_college_service_charge: { type: 'income' },
     service_charge_income: { type: 'income' },
     misc: { type: 'expense' },
+    wifi_phone_bill: { type: 'expense' },
+    recharge: { type: 'expense' },
+    food_refreshment: { type: 'expense' },
+    stationery: { type: 'expense' },
+    printing: { type: 'expense' },
+    maintenance: { type: 'expense' },
+    advertisement_marketing: { type: 'expense' },
+    college_visit: { type: 'expense' },
+    field_work: { type: 'expense' },
+    data_collection: { type: 'expense' },
+    agent_commission: { type: 'expense' },
+    sub_agent_commission: { type: 'expense' },
+    donation: { type: 'expense' },
+    investment: { type: 'asset' },
   },
 
   PAGINATION: {

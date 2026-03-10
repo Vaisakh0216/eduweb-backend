@@ -98,6 +98,36 @@ const remove = async (req, res, next) => {
   }
 };
 
+const clearAll = async (req, res, next) => {
+  try {
+    const branchId = req.query.branchId || req.body.branchId;
+    const result = await daybookService.clearAll(branchId, req.user._id);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: { deletedCount: result.deletedCount },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const hardClearAll = async (req, res, next) => {
+  try {
+    const branchId = req.query.branchId || req.body.branchId;
+    const result = await daybookService.hardClearAll(branchId);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: { deletedCount: result.deletedCount },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const exportCSV = async (req, res, next) => {
   try {
     const data = await daybookService.export(req.query);
@@ -186,6 +216,8 @@ module.exports = {
   findById,
   update,
   remove,
+  clearAll,
+  hardClearAll,
   exportCSV,
   addAttachment,
   removeAttachment,

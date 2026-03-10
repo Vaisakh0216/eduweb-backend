@@ -16,7 +16,6 @@ const cashbookSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: DAYBOOK_CATEGORIES,
-      required: [true, 'Category is required'],
     },
     description: String,
     credited: {
