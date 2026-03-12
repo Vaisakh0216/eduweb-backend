@@ -61,7 +61,7 @@ router.get(
 
 router.post(
   '/',
-  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN),
+  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF),
   checkBranchAccess('branchId'),
   validate(daybookValidator.createDaybookSchema),
   daybookController.create
@@ -71,6 +71,12 @@ router.get(
   '/',
   filterByBranch,
   daybookController.findAll
+);
+
+router.get(
+  '/petty-cash',
+  filterByBranch,
+  daybookController.getPettyCashData
 );
 
 router.get(

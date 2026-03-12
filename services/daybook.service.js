@@ -354,15 +354,32 @@ class DaybookService {
     entry.voucherId = voucher._id;
     await entry.save();
 
-    // Only create cashbook entry for Cash / Petty Cash accounts
-    // Bank account affects bank balance (tracked via daybook paymentMode), not cashbook
-    const isCashAccount = !data.account || data.account === "Cash" || data.account === "Petty Cash";
-    if (isCashAccount) {
+    // Determine whether to create a cashbook (Cash balance) entry:
+    // 1. account=Cash (or unset): normal income/expense — update Cash balance.
+    // 2. account=Petty Cash + transactionType=transfer + paymentMode=Cash:
+    //    Cash is being moved OUT to Petty Cash — debit Cash balance.
+    // 3. account=Petty Cash expenses or Bank entries: no cashbook entry needed.
+    const isCashAccount = !data.account || data.account === "Cash";
+    const isPettyCashFromCash =
+      data.account === "Petty Cash" &&
+      data.transactionType === "transfer" &&
+      (!data.paymentMode || data.paymentMode === "Cash");
+
+    if (isCashAccount || isPettyCashFromCash) {
       const lastCashEntry = await Cashbook.findOne({ branchId: data.branchId })
         .sort({ date: -1, createdAt: -1 });
 
-      const credited = type === "income" ? data.amount : 0;
-      const debited = type === "expense" ? data.amount : 0;
+      let credited = 0;
+      let debited = 0;
+
+      if (isCashAccount) {
+        credited = type === "income" ? data.amount : 0;
+        debited = type === "expense" ? data.amount : 0;
+      } else {
+        // Petty Cash transfer from Cash — always a debit from Cash
+        debited = data.amount;
+      }
+
       const runningBalance = (lastCashEntry?.runningBalance || 0) + credited - debited;
 
       await Cashbook.create({
@@ -383,7 +400,7 @@ class DaybookService {
     return entry;
   }
 
-  async getAll(query = {}) {
+  async getAll(query = {}, branchFilter = {}) {
     const {
       page = 1,
       limit = 10,
@@ -392,12 +409,18 @@ class DaybookService {
       startDate,
       endDate,
       search,
+      account,
+      transactionType,
     } = query;
 
-    const filter = {};
+    // Start with the role-based branch filter (set by filterByBranch middleware)
+    const filter = { ...branchFilter };
 
+    // A specific branchId in the query further narrows the filter
     if (branchId) filter.branchId = branchId;
     if (category) filter.category = category;
+    if (account) filter.account = account;
+    if (transactionType) filter.transactionType = transactionType;
 
     if (startDate || endDate) {
       filter.date = {};
@@ -573,6 +596,26 @@ class DaybookService {
       },
       { $sort: { total: -1 } },
     ]);
+  }
+
+  async getPettyCashData(query = {}, branchFilter = {}) {
+    const { branchId, limit = 500 } = query;
+    const base = { ...branchFilter, account: 'Petty Cash' };
+    if (branchId) base.branchId = branchId;
+
+    const [received, expenses] = await Promise.all([
+      // Match both 'transfer' (new) and 'income' (legacy) for backward compatibility
+      Daybook.find({ ...base, transactionType: { $in: ['transfer', 'income'] } })
+        .populate('branchId', 'name code')
+        .sort({ date: -1, createdAt: -1 })
+        .limit(parseInt(limit)),
+      Daybook.find({ ...base, transactionType: 'expense' })
+        .populate('branchId', 'name code')
+        .sort({ date: -1, createdAt: -1 })
+        .limit(parseInt(limit)),
+    ]);
+
+    return { received, expenses };
   }
 
   async clearAll(branchId, deletedBy) {

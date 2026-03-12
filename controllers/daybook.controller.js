@@ -17,7 +17,7 @@ const create = async (req, res, next) => {
 
 const findAll = async (req, res, next) => {
   try {
-    const result = await daybookService.getAll(req.query);
+    const result = await daybookService.getAll(req.query, req.branchFilter || {});
 
     res.status(200).json({
       success: true,
@@ -92,6 +92,19 @@ const remove = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Daybook entry deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPettyCashData = async (req, res, next) => {
+  try {
+    const result = await daybookService.getPettyCashData(req.query, req.branchFilter || {});
+
+    res.status(200).json({
+      success: true,
+      data: result,
     });
   } catch (error) {
     next(error);
@@ -213,6 +226,7 @@ module.exports = {
   findAll,
   getSummary,
   getCategoryBreakdown,
+  getPettyCashData,
   findById,
   update,
   remove,

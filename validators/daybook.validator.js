@@ -22,6 +22,7 @@ const createDaybookSchema = z.object({
   agentPaymentId: z.string().optional().nullable(),
   paymentMode: z.enum(PAYMENT_MODES).optional().default("Cash"),
   partyName: z.string().optional(),
+  paidTo: z.string().optional(),
   transactionRef: z.string().optional(),
 });
 
@@ -37,6 +38,7 @@ const updateDaybookSchema = z.object({
   remarks: z.string().optional(),
   paymentMode: z.enum(PAYMENT_MODES).optional(),
   partyName: z.string().optional(),
+  paidTo: z.string().optional(),
   transactionRef: z.string().optional(),
   date: z.string().or(z.date()).optional(),
 });
