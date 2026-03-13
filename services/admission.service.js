@@ -67,6 +67,16 @@ class AdmissionService {
       filter.academicYear = query.academicYear;
     }
 
+    // Filter by state
+    if (query.state) {
+      filter['student.address.state'] = query.state;
+    }
+
+    // Filter by district
+    if (query.district) {
+      filter['student.address.district'] = query.district;
+    }
+
     // Date range filter
     const dateFilter = buildDateRangeFilter(
       query.startDate,
