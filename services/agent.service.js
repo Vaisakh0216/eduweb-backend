@@ -17,7 +17,7 @@ class AgentService {
 
   async findAll(query) {
     const { page, limit, skip } = getPaginationOptions(query);
-    const filter = {};
+    const filter = { isDeleted: false };
 
     // Search
     if (query.search) {
@@ -202,21 +202,6 @@ class AgentService {
 
     if (!agent) {
       throw new AppError('Agent not found', 404);
-    }
-
-    // Check if agent has admissions (both legacy and multiple agents)
-    const admissionCount = await Admission.countDocuments({
-      $or: [
-        { 'agent.agentId': id },
-        { 'agents.mainAgent.agentId': id },
-        { 'agents.collegeAgent.agentId': id },
-        { 'agents.subAgent.agentId': id },
-      ],
-      isDeleted: false,
-    });
-
-    if (admissionCount > 0) {
-      throw new AppError('Cannot delete agent with linked admissions', 400);
     }
 
     agent.isDeleted = true;
