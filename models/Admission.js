@@ -349,6 +349,26 @@ const admissionSchema = new mongoose.Schema(
       },
     },
 
+    // Documents/Attachments
+    documents: [
+      {
+        filename: String,
+        originalName: String,
+        path: String,
+        mimeType: String,
+        size: Number,
+        label: String,
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        uploadedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      },
+    ],
+
     notes: String,
     isDeleted: {
       type: Boolean,

@@ -1,4 +1,7 @@
+const path = require('path');
+const fs = require('fs');
 const admissionService = require('../services/admission.service');
+const Admission = require('../models/Admission');
 
 const create = async (req, res, next) => {
   try {
@@ -111,6 +114,93 @@ const recalculateSummary = async (req, res, next) => {
   }
 };
 
+const addDocument = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) {
+      return res.status(404).json({ success: false, message: 'Admission not found' });
+    }
+
+    admission.documents.push({
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      path: req.file.path,
+      mimeType: req.file.mimetype,
+      size: req.file.size,
+      label: req.body.label || req.file.originalname,
+      uploadedBy: req.user._id,
+    });
+
+    await admission.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Document uploaded successfully',
+      data: admission.documents,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeDocument = async (req, res, next) => {
+  try {
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) {
+      return res.status(404).json({ success: false, message: 'Admission not found' });
+    }
+
+    const doc = admission.documents.id(req.params.documentId);
+    if (!doc) {
+      return res.status(404).json({ success: false, message: 'Document not found' });
+    }
+
+    // Delete physical file
+    if (doc.path && fs.existsSync(doc.path)) {
+      fs.unlinkSync(doc.path);
+    }
+
+    admission.documents.pull(req.params.documentId);
+    await admission.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Document removed successfully',
+      data: admission.documents,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getDocument = async (req, res, next) => {
+  try {
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) {
+      return res.status(404).json({ success: false, message: 'Admission not found' });
+    }
+
+    const doc = admission.documents.id(req.params.documentId);
+    if (!doc) {
+      return res.status(404).json({ success: false, message: 'Document not found' });
+    }
+
+    if (!fs.existsSync(doc.path)) {
+      return res.status(404).json({ success: false, message: 'File not found on server' });
+    }
+
+    res.setHeader('Content-Type', doc.mimeType);
+    res.setHeader('Content-Disposition', `inline; filename="${doc.originalName}"`);
+    fs.createReadStream(doc.path).pipe(res);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   findAll,
@@ -119,4 +209,7 @@ module.exports = {
   update,
   remove,
   recalculateSummary,
+  addDocument,
+  removeDocument,
+  getDocument,
 };
