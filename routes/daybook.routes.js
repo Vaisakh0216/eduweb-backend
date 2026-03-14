@@ -111,7 +111,7 @@ router.delete(
 
 router.post(
   '/:id/attachments',
-  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN),
+  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF),
   upload.single('file'),
   daybookController.addAttachment
 );
