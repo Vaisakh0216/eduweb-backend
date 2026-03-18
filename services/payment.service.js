@@ -839,11 +839,14 @@ class PaymentService {
         remarks = `Service charge portion: ₹${serviceChargeDeducted}, Due to college: ₹${amountDueToCollege}`;
       }
 
+      const account = data.account || "Cash";
+
       await Daybook.create({
         date: payment.paymentDate,
         branchId: data.branchId,
         category,
-        type: DAYBOOK_TYPES.INCOME,
+        transactionType: DAYBOOK_TYPES.INCOME,
+        account,
         amount: data.amount,
         description,
         admissionId: data.admissionId,
@@ -853,8 +856,8 @@ class PaymentService {
         createdBy,
       });
 
-      // Update cashbook if cash payment
-      if (data.paymentMode === "Cash") {
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
         const lastEntry = await Cashbook.findOne({
           branchId: data.branchId,
         }).sort({ date: -1, createdAt: -1 });
@@ -865,7 +868,7 @@ class PaymentService {
           date: payment.paymentDate,
           branchId: data.branchId,
           category,
-          description: `Cash received from ${data.payerType}: ${admission.student.firstName} ${admission.student.lastName}`,
+          description: `Received from ${data.payerType}: ${admission.student.firstName} ${admission.student.lastName}`,
           credited: data.amount,
           debited: 0,
           runningBalance,
@@ -880,11 +883,14 @@ class PaymentService {
       data.payerType === PAYER_TYPES.CONSULTANCY &&
       data.receiverType === RECEIVER_TYPES.COLLEGE
     ) {
+      const account = data.account || "Cash";
+
       await Daybook.create({
         date: payment.paymentDate,
         branchId: data.branchId,
         category: "paid_to_college",
-        type: DAYBOOK_TYPES.EXPENSE,
+        transactionType: DAYBOOK_TYPES.EXPENSE,
+        account,
         amount: data.amount,
         description: `Paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
         admissionId: data.admissionId,
@@ -893,8 +899,8 @@ class PaymentService {
         createdBy,
       });
 
-      // Update cashbook if cash payment
-      if (data.paymentMode === "Cash") {
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
         const lastEntry = await Cashbook.findOne({
           branchId: data.branchId,
         }).sort({ date: -1, createdAt: -1 });
@@ -905,7 +911,7 @@ class PaymentService {
           date: payment.paymentDate,
           branchId: data.branchId,
           category: "paid_to_college",
-          description: `Cash paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
+          description: `Paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
           credited: 0,
           debited: data.amount,
           runningBalance,
@@ -920,7 +926,6 @@ class PaymentService {
       data.payerType === PAYER_TYPES.CONSULTANCY &&
       data.receiverType === RECEIVER_TYPES.AGENT
     ) {
-      // Get agent name for description
       const Agent = require("../models/Agent");
       let agentName = "Agent";
       if (paidToAgentId) {
@@ -928,12 +933,14 @@ class PaymentService {
         if (agent) agentName = agent.name;
       }
 
-      // Create daybook entry as EXPENSE - money going out from consultancy
+      const account = data.account || "Cash";
+
       await Daybook.create({
         date: payment.paymentDate,
         branchId: data.branchId,
         category: "paid_to_agent",
-        type: DAYBOOK_TYPES.EXPENSE,
+        transactionType: DAYBOOK_TYPES.EXPENSE,
+        account,
         amount: data.amount,
         description: `Agent fee paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
         admissionId: data.admissionId,
@@ -942,8 +949,8 @@ class PaymentService {
         createdBy,
       });
 
-      // Update cashbook if cash payment
-      if (data.paymentMode === "Cash") {
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
         const lastEntry = await Cashbook.findOne({
           branchId: data.branchId,
         }).sort({ date: -1, createdAt: -1 });
@@ -954,7 +961,7 @@ class PaymentService {
           date: payment.paymentDate,
           branchId: data.branchId,
           category: "paid_to_agent",
-          description: `Cash paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
+          description: `Paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
           credited: 0,
           debited: data.amount,
           runningBalance,
@@ -1064,14 +1071,59 @@ class PaymentService {
     }
 
     const originalAmount = payment.amount;
+    const originalPayerType = payment.payerType;
+    const voucherId = payment.voucherId;
+    const branchId = payment.branchId;
+    const admissionId = payment.admissionId;
+
+    console.log('[payment.update] id:', id, 'originalAmount:', originalAmount, 'newAmount:', data.amount, 'voucherId:', voucherId);
 
     Object.assign(payment, data);
     payment.updatedBy = updatedBy;
     await payment.save();
 
-    if (data.amount && data.amount !== originalAmount) {
-      await admissionService.updatePaymentSummary(payment.admissionId);
+    if (data.amount !== undefined && Number(data.amount) !== Number(originalAmount)) {
+      const newAmount = Number(data.amount);
+      console.log('[payment.update] amount changed → cascading to daybook/cashbook. newAmount:', newAmount, 'voucherId:', voucherId);
+
+      // Update linked daybook entry amount (use voucherId — already an ObjectId, no casting needed)
+      if (voucherId) {
+        const daybookResult = await Daybook.updateMany(
+          { voucherId, isDeleted: { $ne: true } },
+          { $set: { amount: newAmount } }
+        );
+        console.log('[payment.update] Daybook.updateMany result:', daybookResult);
+
+        await Voucher.findByIdAndUpdate(voucherId, { $set: { amount: newAmount } });
+      } else {
+        console.log('[payment.update] WARNING: voucherId is null/undefined — skipping daybook/cashbook update');
+      }
+
+      // Update linked cashbook entry and recalculate balances
+      if (voucherId) {
+        const isPaidOut = originalPayerType === "Consultancy";
+        if (isPaidOut) {
+          const cbResult = await Cashbook.updateMany(
+            { voucherId, isDeleted: { $ne: true } },
+            { $set: { debited: newAmount, credited: 0 } }
+          );
+          console.log('[payment.update] Cashbook.updateMany (debit) result:', cbResult);
+        } else {
+          const cbResult = await Cashbook.updateMany(
+            { voucherId, isDeleted: { $ne: true } },
+            { $set: { credited: newAmount, debited: 0 } }
+          );
+          console.log('[payment.update] Cashbook.updateMany (credit) result:', cbResult);
+        }
+        await this._recalculateCashbookBalances(branchId);
+      }
+    } else {
+      console.log('[payment.update] amount unchanged or not in payload — no cascade');
     }
+
+    // Always recalculate admission summary — amount, serviceChargeDeducted,
+    // amountDueToCollege, payerType, receiverType all feed into it
+    await admissionService.updatePaymentSummary(admissionId);
 
     return payment.populate([
       {
@@ -1094,9 +1146,44 @@ class PaymentService {
     payment.deletedBy = deletedBy;
     await payment.save();
 
+    // Soft-delete linked daybook and cashbook entries via voucherId
+    if (payment.voucherId) {
+      await Daybook.updateMany(
+        { voucherId: payment.voucherId, isDeleted: { $ne: true } },
+        { $set: { isDeleted: true, deletedAt: new Date(), deletedBy } }
+      );
+      await Cashbook.updateMany(
+        { voucherId: payment.voucherId, isDeleted: { $ne: true } },
+        { $set: { isDeleted: true, deletedAt: new Date(), deletedBy } }
+      );
+      await this._recalculateCashbookBalances(payment.branchId);
+    }
+
     await admissionService.updatePaymentSummary(payment.admissionId);
 
     return true;
+  }
+
+  async _recalculateCashbookBalances(branchId) {
+    const entries = await Cashbook.find({ branchId, isDeleted: false })
+      .sort({ date: 1, createdAt: 1 });
+
+    let runningBalance = 0;
+    const bulkOps = [];
+    for (const cashEntry of entries) {
+      runningBalance += (cashEntry.credited || 0) - (cashEntry.debited || 0);
+      if (cashEntry.runningBalance !== runningBalance) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: cashEntry._id },
+            update: { $set: { runningBalance } },
+          },
+        });
+      }
+    }
+    if (bulkOps.length > 0) {
+      await Cashbook.bulkWrite(bulkOps);
+    }
   }
 
   async checkTransactionRef(transactionRef) {

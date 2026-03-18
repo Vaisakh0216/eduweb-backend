@@ -475,6 +475,11 @@ class DaybookService {
   }
 
   async update(id, data, userId) {
+    const original = await Daybook.findById(id);
+    if (!original) {
+      throw new Error("Entry not found");
+    }
+
     const entry = await Daybook.findByIdAndUpdate(
       id,
       { ...data, updatedBy: userId },
@@ -487,7 +492,62 @@ class DaybookService {
       throw new Error("Entry not found");
     }
 
+    // If amount or transactionType changed, sync cashbook entry and recalculate balances
+    const amountChanged = data.amount !== undefined && data.amount !== original.amount;
+    const typeChanged = data.transactionType !== undefined && data.transactionType !== original.transactionType;
+
+    if (amountChanged || typeChanged) {
+      const newAmount = data.amount !== undefined ? data.amount : original.amount;
+      const newType = data.transactionType !== undefined
+        ? data.transactionType
+        : (original.transactionType || DAYBOOK_CATEGORIES_CONFIG[original.category]?.type || "expense");
+
+      const isCashAccount = !entry.account || entry.account === "Cash";
+      const isPettyCashTransfer = entry.account === "Petty Cash" && newType === "transfer";
+
+      if (isCashAccount || isPettyCashTransfer) {
+        let credited = 0;
+        let debited = 0;
+        if (isCashAccount) {
+          credited = newType === "income" ? newAmount : 0;
+          debited = newType === "expense" ? newAmount : 0;
+        } else {
+          // Petty Cash transfer from Cash — debit Cash
+          debited = newAmount;
+        }
+
+        await Cashbook.updateMany(
+          { daybookId: id, isDeleted: false },
+          { credited, debited }
+        );
+
+        await this._recalculateCashbookBalances(original.branchId);
+      }
+    }
+
     return entry;
+  }
+
+  async _recalculateCashbookBalances(branchId) {
+    const entries = await Cashbook.find({ branchId, isDeleted: false })
+      .sort({ date: 1, createdAt: 1 });
+
+    let runningBalance = 0;
+    const bulkOps = [];
+    for (const cashEntry of entries) {
+      runningBalance += (cashEntry.credited || 0) - (cashEntry.debited || 0);
+      if (cashEntry.runningBalance !== runningBalance) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: cashEntry._id },
+            update: { $set: { runningBalance } },
+          },
+        });
+      }
+    }
+    if (bulkOps.length > 0) {
+      await Cashbook.bulkWrite(bulkOps);
+    }
   }
 
   async delete(id, userId) {

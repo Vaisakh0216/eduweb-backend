@@ -1,5 +1,5 @@
 const { z } = require('zod');
-const { PAYER_TYPES, RECEIVER_TYPES, PAYMENT_MODES } = require('../utils/constants');
+const { PAYER_TYPES, RECEIVER_TYPES, PAYMENT_MODES, DAYBOOK_ACCOUNTS } = require('../utils/constants');
 
 const createPaymentSchema = z.object({
   admissionId: z.string().min(1, 'Admission is required'),
@@ -9,6 +9,7 @@ const createPaymentSchema = z.object({
   paymentDate: z.string().or(z.date()).optional(),
   amount: z.number().positive('Amount must be greater than 0'),
   paymentMode: z.enum(PAYMENT_MODES),
+  account: z.enum(DAYBOOK_ACCOUNTS).optional().default('Cash'),
   transactionRef: z.string().optional().nullable(),
   notes: z.string().optional(),
   isServiceChargePayment: z.boolean().optional().default(false),
@@ -32,6 +33,7 @@ const updatePaymentSchema = z.object({
   paymentDate: z.string().or(z.date()).optional(),
   amount: z.number().positive('Amount must be greater than 0').optional(),
   paymentMode: z.enum(PAYMENT_MODES).optional(),
+  account: z.enum(DAYBOOK_ACCOUNTS).optional(),
   transactionRef: z.string().optional().nullable(),
   notes: z.string().optional(),
   isServiceChargePayment: z.boolean().optional(),

@@ -305,17 +305,40 @@ class DashboardService {
       }
     }
 
+    const bankIncomeCategories = [
+      'received_from_student',
+      'received_from_college_service_charge',
+      'service_charge_income',
+    ];
+
     // Get bank transactions from daybook (non-cash payments)
     const bankTransactions = await Daybook.aggregate([
-      { 
-        $match: { 
+      {
+        $match: {
           ...matchFilter,
           paymentMode: { $in: ['UPI', 'BankTransfer', 'Card', 'Cheque'] }
-        } 
+        }
+      },
+      {
+        $addFields: {
+          computedType: {
+            $cond: {
+              if: { $ifNull: ['$transactionType', false] },
+              then: '$transactionType',
+              else: {
+                $cond: {
+                  if: { $in: ['$category', bankIncomeCategories] },
+                  then: 'income',
+                  else: 'expense',
+                },
+              },
+            },
+          },
+        },
       },
       {
         $group: {
-          _id: '$type',
+          _id: '$computedType',
           total: { $sum: '$amount' },
         },
       },
@@ -366,13 +389,36 @@ class DashboardService {
       date: { $gte: startDate, $lte: endDate },
     };
 
+    const incomeCategories = [
+      'received_from_student',
+      'received_from_college_service_charge',
+      'service_charge_income',
+    ];
+
     const trend = await Daybook.aggregate([
       { $match: matchFilter },
+      {
+        $addFields: {
+          computedType: {
+            $cond: {
+              if: { $ifNull: ['$transactionType', false] },
+              then: '$transactionType',
+              else: {
+                $cond: {
+                  if: { $in: ['$category', incomeCategories] },
+                  then: 'income',
+                  else: 'expense',
+                },
+              },
+            },
+          },
+        },
+      },
       {
         $group: {
           _id: {
             month: { $month: '$date' },
-            type: '$type',
+            type: '$computedType',
           },
           total: { $sum: '$amount' },
         },

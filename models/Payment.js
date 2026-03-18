@@ -3,6 +3,7 @@ const {
   PAYER_TYPES,
   RECEIVER_TYPES,
   PAYMENT_MODES,
+  DAYBOOK_ACCOUNTS,
 } = require('../utils/constants');
 
 const paymentSchema = new mongoose.Schema(
@@ -48,6 +49,12 @@ const paymentSchema = new mongoose.Schema(
       trim: true,
     },
     notes: String,
+    // Account the money came from / went into
+    account: {
+      type: String,
+      enum: DAYBOOK_ACCOUNTS,
+      default: 'Cash',
+    },
     // Attachment (image or PDF)
     attachment: {
       filename: String,
