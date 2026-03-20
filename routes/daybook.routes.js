@@ -86,7 +86,7 @@ router.get(
 
 router.put(
   '/:id',
-  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN),
+  authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.STAFF),
   validate(daybookValidator.updateDaybookSchema),
   daybookController.update
 );
