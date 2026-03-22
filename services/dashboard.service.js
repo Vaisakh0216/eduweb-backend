@@ -12,25 +12,29 @@ class DashboardService {
     const dateFilter = this.buildDateFilter(query.startDate, query.endDate);
 
     const [
-      financialSummary,
+      financialBreakdown,
       admissionStats,
       paymentPending,
       serviceChargePending,
       agentPaymentPending,
       cashBalance,
       bankBalance,
+      serviceRevenueSummary,
+      consultantCommissionSummary,
     ] = await Promise.all([
-      this.getFinancialSummary(branchFilter, dateFilter),
+      this.getFinancialBreakdown(branchFilter, dateFilter),
       this.getAdmissionStats(branchFilter, dateFilter),
       this.getPaymentPending(branchFilter),
       this.getServiceChargePending(branchFilter, user.role),
       this.getAgentPaymentPending(branchFilter),
       this.getCashBalance(branchFilter, query.branchId),
       this.getBankBalance(branchFilter, query.branchId),
+      this.getServiceRevenueSummary(branchFilter, dateFilter),
+      this.getConsultantCommissionSummary(branchFilter, dateFilter),
     ]);
 
     return {
-      financial: financialSummary,
+      financial: financialBreakdown,
       admissions: admissionStats,
       pending: {
         studentPayments: paymentPending,
@@ -39,6 +43,8 @@ class DashboardService {
       },
       cashInHand: cashBalance,
       cashInBank: bankBalance,
+      serviceRevenue: serviceRevenueSummary,
+      consultantCommission: consultantCommissionSummary,
     };
   }
 
@@ -68,57 +74,66 @@ class DashboardService {
     return Object.keys(filter).length > 0 ? filter : null;
   }
 
-  async getFinancialSummary(branchFilter, dateFilter) {
-    const matchFilter = { isDeleted: false, ...branchFilter };
-    if (dateFilter) {
-      matchFilter.date = dateFilter;
-    }
+  async getFinancialBreakdown(branchFilter, dateFilter) {
+    // Payment-based filters (paymentDate field)
+    const paymentMatch = { isDeleted: false, ...branchFilter };
+    if (dateFilter) paymentMatch.paymentDate = dateFilter;
 
-    const incomeCategories = [
-      'received_from_student',
-      'received_from_college_service_charge',
-      'service_charge_income',
+    // Daybook-based filters (date field)
+    const daybookMatch = { isDeleted: false, ...branchFilter };
+    if (dateFilter) daybookMatch.date = dateFilter;
+
+    // Operating expense categories — regular business costs, excludes college/agent payouts
+    const operatingExpenseCategories = [
+      'electricity_bill', 'water_bill', 'office_rent', 'salary', 'misc',
+      'wifi_phone_bill', 'recharge', 'food_refreshment', 'stationery', 'printing',
+      'maintenance', 'advertisement_marketing', 'college_visit', 'field_work',
+      'data_collection', 'agent_commission', 'sub_agent_commission', 'donation',
     ];
 
-    const summary = await Daybook.aggregate([
-      { $match: matchFilter },
-      {
-        $addFields: {
-          computedType: {
-            $cond: {
-              if: { $ifNull: ['$transactionType', false] },
-              then: '$transactionType',
-              else: {
-                $cond: {
-                  if: { $in: ['$category', incomeCategories] },
-                  then: 'income',
-                  else: 'expense',
-                },
-              },
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: '$computedType',
-          total: { $sum: '$amount' },
-        },
-      },
+    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult] = await Promise.all([
+      // Service Revenue = sum of serviceChargeDeducted from all payments
+      // (covers SC-only, mixed, and college-paid SC payments)
+      Payment.aggregate([
+        { $match: paymentMatch },
+        { $group: { _id: null, total: { $sum: '$serviceChargeDeducted' } } },
+      ]),
+
+      // Fee Income = sum of amountDueToCollege from all payments
+      Payment.aggregate([
+        { $match: paymentMatch },
+        { $group: { _id: null, total: { $sum: '$amountDueToCollege' } } },
+      ]),
+
+      // Operating Expenses = petty cash and running costs from daybook
+      Daybook.aggregate([
+        { $match: { ...daybookMatch, category: { $in: operatingExpenseCategories } } },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
+      ]),
+
+      // Fee Paid to College = paid_to_college daybook entries
+      Daybook.aggregate([
+        { $match: { ...daybookMatch, category: 'paid_to_college' } },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
+      ]),
     ]);
 
-    let totalIncome = 0;
-    let totalExpense = 0;
-
-    summary.forEach((item) => {
-      if (item._id === 'income') totalIncome = item.total;
-      if (item._id === 'expense') totalExpense = item.total;
-    });
+    const serviceRevenue = serviceRevenueResult[0]?.total || 0;
+    const feeIncome = feeIncomeResult[0]?.total || 0;
+    const operatingExpenses = opExpResult[0]?.total || 0;
+    const feePaidToCollege = feePaidResult[0]?.total || 0;
 
     return {
-      totalIncome,
-      totalExpense,
-      netProfit: totalIncome - totalExpense,
+      businessProfit: {
+        serviceRevenue,
+        operatingExpenses,
+        netProfit: serviceRevenue - operatingExpenses,
+      },
+      feeManagement: {
+        feeIncome,
+        feePaidToCollege,
+        balancePayableToCollege: feeIncome - feePaidToCollege,
+      },
     };
   }
 
@@ -519,6 +534,61 @@ class DashboardService {
     }
 
     return months;
+  }
+
+  async getServiceRevenueSummary(branchFilter, dateFilter) {
+    const matchFilter = { isDeleted: false, ...branchFilter };
+    if (dateFilter) matchFilter.admissionDate = dateFilter;
+
+    const result = await Admission.aggregate([
+      { $match: matchFilter },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $ifNull: ['$serviceCharge.agreed', 0] } },
+          received: { $sum: { $ifNull: ['$serviceCharge.received', 0] } },
+          pending: { $sum: { $ifNull: ['$serviceCharge.due', 0] } },
+        },
+      },
+    ]);
+
+    return {
+      total: result[0]?.total || 0,
+      received: result[0]?.received || 0,
+      pending: result[0]?.pending || 0,
+    };
+  }
+
+  async getConsultantCommissionSummary(branchFilter, dateFilter) {
+    const matchFilter = { isDeleted: false, ...branchFilter };
+    if (dateFilter) matchFilter.admissionDate = dateFilter;
+
+    const result = await Admission.aggregate([
+      { $match: matchFilter },
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: {
+              $add: [
+                { $ifNull: ['$agents.totalAgentFee', 0] },
+                { $ifNull: ['$agent.agentFee', 0] },
+              ],
+            },
+          },
+          paid: { $sum: { $ifNull: ['$paymentSummary.agentPaid', 0] } },
+        },
+      },
+    ]);
+
+    const total = result[0]?.total || 0;
+    const paid = result[0]?.paid || 0;
+
+    return {
+      total,
+      paid,
+      payable: Math.max(0, total - paid),
+    };
   }
 
   async getPaymentTrend(query, user) {
