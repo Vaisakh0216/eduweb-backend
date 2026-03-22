@@ -10,6 +10,7 @@ class DashboardService {
   async getDashboardStats(query, user) {
     const branchFilter = this.buildBranchFilter(query, user);
     const dateFilter = this.buildDateFilter(query.startDate, query.endDate);
+    const academicYear = query.academicYear || null;
 
     const [
       financialBreakdown,
@@ -23,14 +24,14 @@ class DashboardService {
       consultantCommissionSummary,
     ] = await Promise.all([
       this.getFinancialBreakdown(branchFilter, dateFilter),
-      this.getAdmissionStats(branchFilter, dateFilter),
-      this.getPaymentPending(branchFilter),
-      this.getServiceChargePending(branchFilter, user.role),
-      this.getAgentPaymentPending(branchFilter),
+      this.getAdmissionStats(branchFilter, dateFilter, academicYear),
+      this.getPaymentPending(branchFilter, academicYear),
+      this.getServiceChargePending(branchFilter, user.role, academicYear),
+      this.getAgentPaymentPending(branchFilter, academicYear),
       this.getCashBalance(branchFilter, query.branchId),
       this.getBankBalance(branchFilter, query.branchId),
-      this.getServiceRevenueSummary(branchFilter, dateFilter),
-      this.getConsultantCommissionSummary(branchFilter, dateFilter),
+      this.getServiceRevenueSummary(branchFilter, dateFilter, academicYear),
+      this.getConsultantCommissionSummary(branchFilter, dateFilter, academicYear),
     ]);
 
     return {
@@ -88,7 +89,7 @@ class DashboardService {
       'electricity_bill', 'water_bill', 'office_rent', 'salary', 'misc',
       'wifi_phone_bill', 'recharge', 'food_refreshment', 'stationery', 'printing',
       'maintenance', 'advertisement_marketing', 'college_visit', 'field_work',
-      'data_collection', 'agent_commission', 'sub_agent_commission', 'donation',
+      'data_collection', 'agent_commission', 'sub_agent_commission', 'donation', 'paid_to_agent',
     ];
 
     const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult] = await Promise.all([
@@ -137,11 +138,10 @@ class DashboardService {
     };
   }
 
-  async getAdmissionStats(branchFilter, dateFilter) {
+  async getAdmissionStats(branchFilter, dateFilter, academicYear) {
     const matchFilter = { isDeleted: false, ...branchFilter };
-    if (dateFilter) {
-      matchFilter.admissionDate = dateFilter;
-    }
+    if (dateFilter) matchFilter.admissionDate = dateFilter;
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const stats = await Admission.aggregate([
       { $match: matchFilter },
@@ -170,8 +170,9 @@ class DashboardService {
     return result;
   }
 
-  async getPaymentPending(branchFilter) {
+  async getPaymentPending(branchFilter, academicYear) {
     const matchFilter = { isDeleted: false, ...branchFilter };
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const result = await Admission.aggregate([
       { $match: matchFilter },
@@ -194,10 +195,11 @@ class DashboardService {
     };
   }
 
-  async getServiceChargePending(branchFilter, userRole) {
+  async getServiceChargePending(branchFilter, userRole, academicYear) {
     if (userRole === ROLES.STAFF) return null;
 
     const matchFilter = { isDeleted: false, ...branchFilter };
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const result = await Admission.aggregate([
       { $match: matchFilter },
@@ -220,8 +222,9 @@ class DashboardService {
     };
   }
 
-  async getAgentPaymentPending(branchFilter) {
+  async getAgentPaymentPending(branchFilter, academicYear) {
     const matchFilter = { isDeleted: false, ...branchFilter };
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const result = await Admission.aggregate([
       { $match: matchFilter },
@@ -484,6 +487,7 @@ class DashboardService {
       ...branchFilter,
       admissionDate: { $gte: startDate, $lte: endDate },
     };
+    if (query.academicYear) matchFilter.academicYear = query.academicYear;
 
     const trend = await Admission.aggregate([
       { $match: matchFilter },
@@ -536,9 +540,10 @@ class DashboardService {
     return months;
   }
 
-  async getServiceRevenueSummary(branchFilter, dateFilter) {
+  async getServiceRevenueSummary(branchFilter, dateFilter, academicYear) {
     const matchFilter = { isDeleted: false, ...branchFilter };
     if (dateFilter) matchFilter.admissionDate = dateFilter;
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const result = await Admission.aggregate([
       { $match: matchFilter },
@@ -559,9 +564,10 @@ class DashboardService {
     };
   }
 
-  async getConsultantCommissionSummary(branchFilter, dateFilter) {
+  async getConsultantCommissionSummary(branchFilter, dateFilter, academicYear) {
     const matchFilter = { isDeleted: false, ...branchFilter };
     if (dateFilter) matchFilter.admissionDate = dateFilter;
+    if (academicYear) matchFilter.academicYear = academicYear;
 
     const result = await Admission.aggregate([
       { $match: matchFilter },

@@ -6,6 +6,7 @@ const { authenticate } = require('../middlewares');
 router.use(authenticate);
 
 router.get('/stats', dashboardController.getStats);
+router.get('/academic-years', dashboardController.getAcademicYears);
 router.get('/monthly-trend', dashboardController.getMonthlyTrend);
 router.get('/admission-trend', dashboardController.getAdmissionTrend);
 router.get('/payment-trend', dashboardController.getPaymentTrend);

@@ -66,7 +66,7 @@ class AgentPaymentService {
       date: agentPayment.paymentDate,
       branchId: data.branchId,
       category: 'paid_to_agent',
-      type: DAYBOOK_TYPES.EXPENSE,
+      transactionType: DAYBOOK_TYPES.EXPENSE,
       amount: data.amount,
       description: `Commission paid to ${agent.name} for ${admission.admissionNo}`,
       admissionId: data.admissionId,

@@ -41,3 +41,15 @@
 2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
 2026-02-01 11:38:16 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
 2026-02-01 11:38:17 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 00:12:58 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-03-23 00:12:58 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/stats?year=2026 - GET - ::1
+2026-03-23 00:12:58 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/monthly-trend?year=2026 - GET - ::1
+2026-03-23 00:12:58 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/admission-trend?year=2026 - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/colleges/active - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 00:28:09 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
