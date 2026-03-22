@@ -53,3 +53,18 @@
 2026-03-23 00:28:09 [ERROR]: 401 - Your token has expired. Please log in again. - /api/admissions?page=1&limit=10 - GET - ::1
 2026-03-23 00:28:09 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
 2026-03-23 00:28:09 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/stats?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/academic-years - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/stats?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/monthly-trend?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/admission-trend?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/branches/active - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/academic-years - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/monthly-trend?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Your token has expired. Please log in again. - /api/dashboard/admission-trend?year=2026 - GET - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1
+2026-03-23 01:06:14 [ERROR]: 401 - Invalid refresh token - /api/auth/refresh-token - POST - ::1

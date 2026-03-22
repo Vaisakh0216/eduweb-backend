@@ -23,7 +23,7 @@ class DashboardService {
       serviceRevenueSummary,
       consultantCommissionSummary,
     ] = await Promise.all([
-      this.getFinancialBreakdown(branchFilter, dateFilter),
+      this.getFinancialBreakdown(branchFilter, dateFilter, academicYear),
       this.getAdmissionStats(branchFilter, dateFilter, academicYear),
       this.getPaymentPending(branchFilter, academicYear),
       this.getServiceChargePending(branchFilter, user.role, academicYear),
@@ -75,7 +75,7 @@ class DashboardService {
     return Object.keys(filter).length > 0 ? filter : null;
   }
 
-  async getFinancialBreakdown(branchFilter, dateFilter) {
+  async getFinancialBreakdown(branchFilter, dateFilter, academicYear) {
     // Payment-based filters (paymentDate field)
     const paymentMatch = { isDeleted: false, ...branchFilter };
     if (dateFilter) paymentMatch.paymentDate = dateFilter;
@@ -83,6 +83,17 @@ class DashboardService {
     // Daybook-based filters (date field)
     const daybookMatch = { isDeleted: false, ...branchFilter };
     if (dateFilter) daybookMatch.date = dateFilter;
+
+    // When academic year is selected, scope payment-linked queries to that year's admissions
+    if (academicYear) {
+      const admissionIds = await Admission.distinct('_id', {
+        isDeleted: false,
+        ...branchFilter,
+        academicYear,
+      });
+      paymentMatch.admissionId = { $in: admissionIds };
+      daybookMatch.admissionId = { $in: admissionIds };
+    }
 
     // Operating expense categories — regular business costs, excludes college/agent payouts
     const operatingExpenseCategories = [
@@ -406,6 +417,15 @@ class DashboardService {
       ...branchFilter,
       date: { $gte: startDate, $lte: endDate },
     };
+
+    if (query.academicYear) {
+      const admissionIds = await Admission.distinct('_id', {
+        isDeleted: false,
+        ...branchFilter,
+        academicYear: query.academicYear,
+      });
+      matchFilter.admissionId = { $in: admissionIds };
+    }
 
     const incomeCategories = [
       'received_from_student',
