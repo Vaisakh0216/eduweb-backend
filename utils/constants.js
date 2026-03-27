@@ -80,6 +80,7 @@ module.exports = {
   },
 
   DAYBOOK_CATEGORIES: [
+    'opening_balance',
     'electricity_bill',
     'water_bill',
     'office_rent',
@@ -107,6 +108,7 @@ module.exports = {
   ],
 
   DAYBOOK_CATEGORIES_CONFIG: {
+    opening_balance: { type: 'asset' },
     electricity_bill: { type: 'expense' },
     water_bill: { type: 'expense' },
     office_rent: { type: 'expense' },

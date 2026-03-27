@@ -1,7 +1,7 @@
-const path = require('path');
 const fs = require('fs');
 const paymentService = require('../services/payment.service');
 const Payment = require('../models/Payment');
+const { getSignedFileUrl } = require('../utils/s3');
 
 const create = async (req, res, next) => {
   try {
@@ -14,11 +14,11 @@ const create = async (req, res, next) => {
     // Handle file upload
     if (req.file) {
       paymentData.attachment = {
-        filename: req.file.filename,
+        filename: req.file.key,
         originalName: req.file.originalname,
-        mimeType: req.file.mimetype,
+        mimeType: req.file.mimetype || req.file.contentType,
         size: req.file.size,
-        path: req.file.path,
+        path: req.file.location,
       };
     }
 
@@ -70,11 +70,11 @@ const update = async (req, res, next) => {
     // Handle file upload
     if (req.file) {
       paymentData.attachment = {
-        filename: req.file.filename,
+        filename: req.file.key,
         originalName: req.file.originalname,
-        mimeType: req.file.mimetype,
+        mimeType: req.file.mimetype || req.file.contentType,
         size: req.file.size,
-        path: req.file.path,
+        path: req.file.location,
       };
     }
 
@@ -132,19 +132,20 @@ const getAttachment = async (req, res, next) => {
     }
 
     const filePath = payment.attachment.path;
-    
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({
-        success: false,
-        message: 'File not found on server',
-      });
+
+    // S3 file — generate signed URL and redirect
+    if (filePath && filePath.startsWith('http')) {
+      const signedUrl = await getSignedFileUrl(payment.attachment.filename);
+      return res.redirect(signedUrl);
     }
 
+    // Legacy local file
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ success: false, message: 'File not found on server' });
+    }
     res.setHeader('Content-Type', payment.attachment.mimeType);
     res.setHeader('Content-Disposition', `inline; filename="${payment.attachment.originalName}"`);
-    
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.pipe(res);
+    fs.createReadStream(filePath).pipe(res);
   } catch (error) {
     next(error);
   }

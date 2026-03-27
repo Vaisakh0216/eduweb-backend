@@ -586,6 +586,81 @@ class DaybookService {
     return entry;
   }
 
+  async setOpeningBalance(data, userId) {
+    const { branchId, amount, date, description } = data;
+
+    // Remove any existing opening balance for this branch
+    const existing = await Daybook.find({ branchId, category: 'opening_balance', isDeleted: false });
+    for (const entry of existing) {
+      await Cashbook.updateMany(
+        { daybookId: entry._id },
+        { isDeleted: true, deletedAt: new Date(), deletedBy: userId }
+      );
+      await Daybook.findByIdAndUpdate(entry._id, {
+        isDeleted: true, deletedAt: new Date(), deletedBy: userId,
+      });
+    }
+
+    // Create new daybook entry
+    const entryDate = date ? new Date(date) : new Date();
+    const entry = await Daybook.create({
+      date: entryDate,
+      branchId,
+      category: 'opening_balance',
+      transactionType: 'asset',
+      account: 'Cash',
+      amount,
+      description: description || 'Opening Balance',
+      createdBy: userId,
+    });
+
+    // Generate voucher
+    const branch = await Branch.findById(branchId);
+    if (!branch) throw new Error('Branch not found');
+    const voucherNo = await generateVoucherNumber(branch.code);
+    const voucher = await require('../models/Voucher').create({
+      voucherNo,
+      branchId,
+      voucherType: 'receipt',
+      amount,
+      description: description || 'Opening Balance',
+      voucherDate: entryDate,
+      daybookId: entry._id,
+      createdBy: userId,
+    });
+    entry.voucherId = voucher._id;
+    await entry.save();
+
+    // Create cashbook entry — treated as a credit (cash comes in)
+    const lastCashEntry = await Cashbook.findOne({ branchId, isDeleted: false })
+      .sort({ date: -1, createdAt: -1 });
+    const runningBalance = (lastCashEntry?.runningBalance || 0) + amount;
+    await Cashbook.create({
+      date: entryDate,
+      branchId,
+      category: 'opening_balance',
+      description: description || 'Opening Balance',
+      credited: amount,
+      debited: 0,
+      runningBalance,
+      voucherId: voucher._id,
+      daybookId: entry._id,
+      createdBy: userId,
+    });
+
+    await this._recalculateCashbookBalances(branchId);
+    return entry;
+  }
+
+  async getOpeningBalance(branchId) {
+    const entry = await Daybook.findOne({
+      branchId,
+      category: 'opening_balance',
+      isDeleted: false,
+    }).sort({ date: -1 });
+    return entry;
+  }
+
   async getSummary(query = {}) {
     const { branchId, startDate, endDate } = query;
 

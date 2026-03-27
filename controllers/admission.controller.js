@@ -1,7 +1,7 @@
-const path = require('path');
 const fs = require('fs');
 const admissionService = require('../services/admission.service');
 const Admission = require('../models/Admission');
+const { getSignedFileUrl } = require('../utils/s3');
 
 const create = async (req, res, next) => {
   try {
@@ -126,10 +126,10 @@ const addDocument = async (req, res, next) => {
     }
 
     admission.documents.push({
-      filename: req.file.filename,
+      filename: req.file.key,
       originalName: req.file.originalname,
-      path: req.file.path,
-      mimeType: req.file.mimetype,
+      path: req.file.location,
+      mimeType: req.file.mimetype || req.file.contentType,
       size: req.file.size,
       label: req.body.label || req.file.originalname,
       uploadedBy: req.user._id,
@@ -189,10 +189,16 @@ const getDocument = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }
 
+    // S3 file — generate signed URL and redirect
+    if (doc.path && doc.path.startsWith('http')) {
+      const signedUrl = await getSignedFileUrl(doc.filename);
+      return res.redirect(signedUrl);
+    }
+
+    // Legacy local file
     if (!fs.existsSync(doc.path)) {
       return res.status(404).json({ success: false, message: 'File not found on server' });
     }
-
     res.setHeader('Content-Type', doc.mimeType);
     res.setHeader('Content-Disposition', `inline; filename="${doc.originalName}"`);
     fs.createReadStream(doc.path).pipe(res);
