@@ -365,19 +365,10 @@ class AdmissionService {
 
     const stats = paymentStats[0] || {};
 
-    // Debug logging
-    console.log('Payment Stats:', {
-      studentToConsultancy: stats.studentToConsultancy,
-      studentToAgent: stats.studentToAgent,
-      studentToCollege: stats.studentToCollege,
-      paidToCollege: stats.paidToCollege,
-    });
-
     // CORRECT CALCULATION:
     // Student Paid = All payments made by student (to Consultancy + to Agent + to College)
     // This represents the total amount the student has paid towards their fee
     const studentPaid = (stats.studentToConsultancy || 0) + (stats.studentToAgent || 0) + (stats.studentToCollege || 0);
-    console.log('Calculated studentPaid:', studentPaid);
     admission.paymentSummary.studentPaid = studentPaid;
     
     // Agent fee calculation:
@@ -431,6 +422,66 @@ class AdmissionService {
       admission.agents.totalAgentFee = mainAgentFee + collegeAgentFee + subAgentFee;
       admission.agents.totalAgentFeePaid = totalAgentPaid;
       admission.agents.totalAgentFeeDue = Math.max(0, admission.agents.totalAgentFee - totalAgentPaid);
+
+      // Calculate feePaid per individual agent
+      // Sources: (1) Consultancy→Agent payments grouped by paidToAgentId
+      //          (2) agentFeeDeducted payments grouped by collectingAgentId
+      //          (3) Legacy AgentPayment records grouped by agentId
+      const agentPaidByAgentId = {};
+
+      // Source 1: Consultancy paid agent directly
+      const directToAgent = await Payment.aggregate([
+        {
+          $match: {
+            admissionId: admissionObjectId,
+            isDeleted: false,
+            payerType: 'Consultancy',
+            receiverType: 'Agent',
+            paidToAgentId: { $ne: null },
+          },
+        },
+        { $group: { _id: '$paidToAgentId', total: { $sum: '$amount' } } },
+      ]);
+      directToAgent.forEach(({ _id, total }) => {
+        if (_id) agentPaidByAgentId[_id.toString()] = (agentPaidByAgentId[_id.toString()] || 0) + total;
+      });
+
+      // Source 2: Agent deducted fee from transfer
+      const deductedByAgent = await Payment.aggregate([
+        {
+          $match: {
+            admissionId: admissionObjectId,
+            isDeleted: false,
+            agentFeeDeducted: { $gt: 0 },
+            collectingAgentId: { $ne: null },
+          },
+        },
+        { $group: { _id: '$collectingAgentId', total: { $sum: '$agentFeeDeducted' } } },
+      ]);
+      deductedByAgent.forEach(({ _id, total }) => {
+        if (_id) agentPaidByAgentId[_id.toString()] = (agentPaidByAgentId[_id.toString()] || 0) + total;
+      });
+
+      // Source 3: Legacy AgentPayment records
+      const legacyPerAgent = await AgentPayment.aggregate([
+        { $match: { admissionId: admissionObjectId, isDeleted: false } },
+        { $group: { _id: '$agentId', total: { $sum: '$amount' } } },
+      ]);
+      legacyPerAgent.forEach(({ _id, total }) => {
+        if (_id) agentPaidByAgentId[_id.toString()] = (agentPaidByAgentId[_id.toString()] || 0) + total;
+      });
+
+      // Apply per-agent paid/due
+      const applyAgentPaid = (agentSubDoc) => {
+        if (!agentSubDoc?.agentId) return;
+        const paid = agentPaidByAgentId[agentSubDoc.agentId.toString()] || 0;
+        agentSubDoc.feePaid = paid;
+        agentSubDoc.feeDue = Math.max(0, (agentSubDoc.agentFee || 0) - paid);
+      };
+
+      applyAgentPaid(admission.agents.mainAgent);
+      applyAgentPaid(admission.agents.collegeAgent);
+      applyAgentPaid(admission.agents.subAgent);
     }
 
     await admission.save();
