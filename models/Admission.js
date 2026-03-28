@@ -447,6 +447,16 @@ admissionSchema.pre('save', function (next) {
   this.paymentSummary.studentDue = Math.max(0,
     fees.totalFee - (this.paymentSummary.studentPaid || 0));
 
+  // Recalculate total agent fee from individual sub-fees so it's always in sync
+  if (this.agents) {
+    this.agents.totalAgentFee =
+      (this.agents.mainAgent?.agentFee || 0) +
+      (this.agents.collegeAgent?.agentFee || 0) +
+      (this.agents.subAgent?.agentFee || 0);
+    this.agents.totalAgentFeeDue = Math.max(0,
+      this.agents.totalAgentFee - (this.agents.totalAgentFeePaid || 0));
+  }
+
   // Calculate agent due - use multiple agents if available, otherwise legacy agent
   const totalAgentFee = this.agents?.totalAgentFee || this.agent?.agentFee || 0;
   this.paymentSummary.agentDue = Math.max(0,
