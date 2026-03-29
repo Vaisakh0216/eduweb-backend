@@ -103,7 +103,12 @@ class DashboardService {
       'data_collection', 'agent_commission', 'sub_agent_commission', 'donation', 'paid_to_agent',
     ];
 
-    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult] = await Promise.all([
+    // Legacy AgentPayment filter (uses paymentDate, branchId)
+    const agentPaymentMatch = { isDeleted: false, ...branchFilter };
+    if (dateFilter) agentPaymentMatch.paymentDate = dateFilter;
+    if (academicYear && paymentMatch.admissionId) agentPaymentMatch.admissionId = paymentMatch.admissionId;
+
+    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult, legacyAgentPayResult] = await Promise.all([
       // Service Revenue = sum of serviceChargeDeducted from all payments
       // (covers SC-only, mixed, and college-paid SC payments)
       Payment.aggregate([
@@ -128,12 +133,22 @@ class DashboardService {
         { $match: { ...daybookMatch, category: 'paid_to_college' } },
         { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
+
+      // Legacy AgentPayment records (cash paid by consultancy to agents — not reflected in Daybook)
+      AgentPayment.aggregate([
+        { $match: agentPaymentMatch },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
+      ]),
     ]);
 
     const serviceRevenue = serviceRevenueResult[0]?.total || 0;
     const feeIncome = feeIncomeResult[0]?.total || 0;
-    const operatingExpenses = opExpResult[0]?.total || 0;
+    const daybookExpenses = opExpResult[0]?.total || 0;
     const feePaidToCollege = feePaidResult[0]?.total || 0;
+    const legacyAgentPaid = legacyAgentPayResult[0]?.total || 0;
+    // operatingExpenses = daybook costs (already includes paid_to_agent via Payment service)
+    //                    + legacy AgentPayment records that bypass Daybook
+    const operatingExpenses = daybookExpenses + legacyAgentPaid;
 
     return {
       businessProfit: {
