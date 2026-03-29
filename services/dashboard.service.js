@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Admission = require('../models/Admission');
 const Payment = require('../models/Payment');
-const AgentPayment = require('../models/AgentPayment');
 const Daybook = require('../models/Daybook');
 const Cashbook = require('../models/Cashbook');
 const { ADMISSION_STATUS, ROLES } = require('../utils/constants');
@@ -103,14 +102,8 @@ class DashboardService {
       'data_collection', 'agent_commission', 'sub_agent_commission', 'donation', 'paid_to_agent',
     ];
 
-    // Legacy AgentPayment filter (uses paymentDate, branchId)
-    const agentPaymentMatch = { isDeleted: false, ...branchFilter };
-    if (dateFilter) agentPaymentMatch.paymentDate = dateFilter;
-    if (academicYear && paymentMatch.admissionId) agentPaymentMatch.admissionId = paymentMatch.admissionId;
-
-    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult, legacyAgentPayResult] = await Promise.all([
+    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult] = await Promise.all([
       // Service Revenue = sum of serviceChargeDeducted from all payments
-      // (covers SC-only, mixed, and college-paid SC payments)
       Payment.aggregate([
         { $match: paymentMatch },
         { $group: { _id: null, total: { $sum: '$serviceChargeDeducted' } } },
@@ -122,7 +115,8 @@ class DashboardService {
         { $group: { _id: null, total: { $sum: '$amountDueToCollege' } } },
       ]),
 
-      // Operating Expenses = petty cash and running costs from daybook
+      // Operating Expenses = all expense categories from Daybook
+      // (paid_to_agent entries are created automatically by the Payment service when paying agents)
       Daybook.aggregate([
         { $match: { ...daybookMatch, category: { $in: operatingExpenseCategories } } },
         { $group: { _id: null, total: { $sum: '$amount' } } },
@@ -133,22 +127,12 @@ class DashboardService {
         { $match: { ...daybookMatch, category: 'paid_to_college' } },
         { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
-
-      // Legacy AgentPayment records (cash paid by consultancy to agents — not reflected in Daybook)
-      AgentPayment.aggregate([
-        { $match: agentPaymentMatch },
-        { $group: { _id: null, total: { $sum: '$amount' } } },
-      ]),
     ]);
 
     const serviceRevenue = serviceRevenueResult[0]?.total || 0;
     const feeIncome = feeIncomeResult[0]?.total || 0;
-    const daybookExpenses = opExpResult[0]?.total || 0;
+    const operatingExpenses = opExpResult[0]?.total || 0;
     const feePaidToCollege = feePaidResult[0]?.total || 0;
-    const legacyAgentPaid = legacyAgentPayResult[0]?.total || 0;
-    // operatingExpenses = daybook costs (already includes paid_to_agent via Payment service)
-    //                    + legacy AgentPayment records that bypass Daybook
-    const operatingExpenses = daybookExpenses + legacyAgentPaid;
 
     return {
       businessProfit: {
