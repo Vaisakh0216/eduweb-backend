@@ -285,6 +285,13 @@ const admissionSchema = new mongoose.Schema(
         min: 0,
         // Amount deducted by agent (agent fee is part of service charge)
       },
+      collectedByAgent: {
+        type: Number,
+        default: 0,
+        min: 0,
+        // SC amount student paid directly to agent (recorded via Journal)
+        // Agent holds this and owes it to consultancy
+      },
       paidBackToCollege: {
         type: Number,
         default: 0,
@@ -420,10 +427,11 @@ admissionSchema.pre('save', function (next) {
   // Calculate service charge totals
   // Total received = from college + deducted from student + deducted by agent - paid back to college
   // If you deduct ₹1000 as SC but then pay that ₹1000 to college, net SC received = 0
-  const grossReceived = 
+  const grossReceived =
     (this.serviceCharge.receivedFromCollege || 0) +
     (this.serviceCharge.deductedFromStudent || 0) +
-    (this.serviceCharge.deductedByAgent || 0);
+    (this.serviceCharge.deductedByAgent || 0) +
+    (this.serviceCharge.collectedByAgent || 0);
   
   const paidBack = this.serviceCharge.paidBackToCollege || 0;
   

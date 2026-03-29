@@ -14,5 +14,6 @@ router.use('/vouchers', require('./voucher.routes'));
 router.use('/daybook', require('./daybook.routes'));
 router.use('/cashbook', require('./cashbook.routes'));
 router.use('/dashboard', require('./dashboard.routes'));
+router.use('/journals', require('./journal.routes'));
 
 module.exports = router;

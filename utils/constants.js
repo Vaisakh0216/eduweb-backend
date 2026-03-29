@@ -135,6 +135,28 @@ module.exports = {
     investment: { type: 'asset' },
   },
 
+  JOURNAL_TYPES: {
+    SC_COLLECTED_BY_AGENT: 'sc_collected_by_agent', // Student paid SC directly to agent
+    SC_ADJUSTMENT: 'sc_adjustment',                  // Manual service charge correction
+    FEE_ADJUSTMENT: 'fee_adjustment',                // Fee discount / correction
+    AGENT_BALANCE_ADJUSTMENT: 'agent_balance_adjustment', // Agent balance correction
+    GENERAL: 'general',                              // Any other manual adjustment
+  },
+
+  JOURNAL_TYPE_LABELS: {
+    sc_collected_by_agent: 'SC Collected by Agent',
+    sc_adjustment: 'Service Charge Adjustment',
+    fee_adjustment: 'Fee Adjustment',
+    agent_balance_adjustment: 'Agent Balance Adjustment',
+    general: 'General Adjustment',
+  },
+
+  JOURNAL_STATUSES: {
+    PENDING: 'pending',      // For sc_collected_by_agent: agent holds SC, not yet remitted
+    SETTLED: 'settled',      // For sc_collected_by_agent: agent remitted SC to consultancy
+    COMPLETED: 'completed',  // For all other types
+  },
+
   PAGINATION: {
     DEFAULT_PAGE: 1,
     DEFAULT_LIMIT: 10,

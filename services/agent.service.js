@@ -2,6 +2,7 @@ const Agent = require('../models/Agent');
 const Admission = require('../models/Admission');
 const AgentPayment = require('../models/AgentPayment');
 const Payment = require('../models/Payment');
+const Journal = require('../models/Journal');
 const AppError = require('../utils/AppError');
 const { getPaginationOptions, formatPaginationResponse, cleanObject } = require('../utils/helpers');
 
@@ -147,6 +148,18 @@ class AgentService {
     totals.totalPaid = legacyPaidTotal + paymentPaidTotal;
     totals.totalDue = Math.max(0, totals.totalAgentFee - totals.totalPaid);
 
+    // Get pending SC-collected-by-agent journals (agent owes this SC to consultancy)
+    const pendingJournals = await Journal.find({
+      agentId: id,
+      type: 'sc_collected_by_agent',
+      status: 'pending',
+      isDeleted: false,
+    })
+      .populate('admissionId', 'admissionNo student.firstName student.lastName')
+      .sort({ journalDate: -1 });
+
+    const scPayableToConsultancy = pendingJournals.reduce((sum, j) => sum + (j.amount || 0), 0);
+
     // Combine payments for display
     const payments = [
       ...legacyPayments.map(p => ({
@@ -176,6 +189,8 @@ class AgentService {
       admissions,
       payments,
       totals,
+      pendingJournals,
+      scPayableToConsultancy,
     };
   }
 

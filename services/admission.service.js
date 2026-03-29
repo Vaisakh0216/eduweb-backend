@@ -1,6 +1,7 @@
 const Admission = require('../models/Admission');
 const Payment = require('../models/Payment');
 const AgentPayment = require('../models/AgentPayment');
+const Journal = require('../models/Journal');
 const Voucher = require('../models/Voucher');
 const AppError = require('../utils/AppError');
 const {
@@ -376,8 +377,16 @@ class AdmissionService {
     // 1. Agent deducted fee while transferring to consultancy (agentFeeDeducted)
     // 2. Consultancy paid agent directly (paidToAgent)
     // 3. Legacy agent payments
-    const totalAgentPaid = (stats.agentFeeDeducted || 0) + (stats.paidToAgent || 0) + (agentPaidLegacy[0]?.totalPaid || 0);
-    admission.paymentSummary.agentPaid = totalAgentPaid;
+    // journalCollectedTotal added below after journalPerAgent is computed
+    const totalAgentPaidFromPayments = (stats.agentFeeDeducted || 0) + (stats.paidToAgent || 0) + (agentPaidLegacy[0]?.totalPaid || 0);
+
+    // Count sc_collected_by_agent journals — per agent (used for both SC tracking and agent feePaid)
+    const journalPerAgent = await Journal.aggregate([
+      { $match: { admissionId: admissionObjectId, isDeleted: false, type: 'sc_collected_by_agent' } },
+      { $group: { _id: '$agentId', total: { $sum: '$amount' } } },
+    ]);
+    const journalCollectedTotal = journalPerAgent.reduce((sum, j) => sum + j.total, 0);
+    admission.serviceCharge.collectedByAgent = journalCollectedTotal;
 
     // Update service charge tracking
     // Service charge comes from:
@@ -413,6 +422,10 @@ class AdmissionService {
     admission.collegePayment.paidToCollege = paidToCollege;
     // Balance is calculated in pre-save hook
 
+    // Total agent paid = payments + SC collected via journals
+    const totalAgentPaid = totalAgentPaidFromPayments + journalCollectedTotal;
+    admission.paymentSummary.agentPaid = totalAgentPaid;
+
     // Update multiple agents payment tracking
     if (admission.agents) {
       // Calculate total agent fee
@@ -427,6 +440,7 @@ class AdmissionService {
       // Sources: (1) Consultancy→Agent payments grouped by paidToAgentId
       //          (2) agentFeeDeducted payments grouped by collectingAgentId
       //          (3) Legacy AgentPayment records grouped by agentId
+      //          (4) SC collected by agent via Journal entries
       const agentPaidByAgentId = {};
 
       // Source 1: Consultancy paid agent directly
@@ -468,6 +482,11 @@ class AdmissionService {
         { $group: { _id: '$agentId', total: { $sum: '$amount' } } },
       ]);
       legacyPerAgent.forEach(({ _id, total }) => {
+        if (_id) agentPaidByAgentId[_id.toString()] = (agentPaidByAgentId[_id.toString()] || 0) + total;
+      });
+
+      // Source 4: SC collected by agent via Journal entries (agent's fee is self-paid from SC)
+      journalPerAgent.forEach(({ _id, total }) => {
         if (_id) agentPaidByAgentId[_id.toString()] = (agentPaidByAgentId[_id.toString()] || 0) + total;
       });
 

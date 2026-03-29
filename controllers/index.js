@@ -12,4 +12,5 @@ module.exports = {
   daybookController: require('./daybook.controller'),
   cashbookController: require('./cashbook.controller'),
   dashboardController: require('./dashboard.controller'),
+  journalController: require('./journal.controller'),
 };
