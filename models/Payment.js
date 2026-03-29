@@ -41,7 +41,13 @@ const paymentSchema = new mongoose.Schema(
     paymentMode: {
       type: String,
       enum: PAYMENT_MODES,
-      required: [true, 'Payment mode is required'],
+      required: [
+        function () {
+          // Student → College payments are reference-only; payment mode not required
+          return !(this.payerType === 'Student' && this.receiverType === 'College');
+        },
+        'Payment mode is required',
+      ],
     },
     transactionRef: {
       type: String,

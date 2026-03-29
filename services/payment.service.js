@@ -1146,8 +1146,11 @@ class PaymentService {
     payment.deletedBy = deletedBy;
     await payment.save();
 
-    // Soft-delete linked daybook and cashbook entries via voucherId
+    // Soft-delete linked voucher, daybook and cashbook entries
     if (payment.voucherId) {
+      await Voucher.findByIdAndUpdate(payment.voucherId, {
+        $set: { isDeleted: true, deletedAt: new Date(), deletedBy },
+      });
       await Daybook.updateMany(
         { voucherId: payment.voucherId, isDeleted: { $ne: true } },
         { $set: { isDeleted: true, deletedAt: new Date(), deletedBy } }
