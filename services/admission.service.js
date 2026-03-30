@@ -291,6 +291,23 @@ class AdmissionService {
               ],
             },
           },
+          // Agent → Consultancy where agent collected this from the student
+          // (counts toward student's paid total — agent was the collection intermediary)
+          agentCollectionFromStudent: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ['$payerType', 'Agent'] },
+                    { $eq: ['$receiverType', 'Consultancy'] },
+                    { $eq: ['$isAgentCollection', true] },
+                  ],
+                },
+                '$amount',
+                0,
+              ],
+            },
+          },
           // Service charge received directly from college
           serviceChargeFromCollege: {
             $sum: {
@@ -368,8 +385,14 @@ class AdmissionService {
 
     // CORRECT CALCULATION:
     // Student Paid = All payments made by student (to Consultancy + to Agent + to College)
-    // This represents the total amount the student has paid towards their fee
-    const studentPaid = (stats.studentToConsultancy || 0) + (stats.studentToAgent || 0) + (stats.studentToCollege || 0);
+    //              + Agent → Consultancy where agent was collecting on behalf of student
+    // Note: agentCollectionFromStudent is only added when isAgentCollection=true to avoid
+    // double-counting with studentToAgent (if both are recorded for the same transaction).
+    const agentCollectionExtra = Math.max(
+      0,
+      (stats.agentCollectionFromStudent || 0) - (stats.studentToAgent || 0)
+    );
+    const studentPaid = (stats.studentToConsultancy || 0) + (stats.studentToAgent || 0) + (stats.studentToCollege || 0) + agentCollectionExtra;
     admission.paymentSummary.studentPaid = studentPaid;
     
     // Agent fee calculation:

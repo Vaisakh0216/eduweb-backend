@@ -1082,43 +1082,56 @@ class PaymentService {
     payment.updatedBy = updatedBy;
     await payment.save();
 
-    if (data.amount !== undefined && Number(data.amount) !== Number(originalAmount)) {
-      const newAmount = Number(data.amount);
-      console.log('[payment.update] amount changed → cascading to daybook/cashbook. newAmount:', newAmount, 'voucherId:', voucherId);
+    if (voucherId) {
+      const newAmount = data.amount !== undefined ? Number(data.amount) : undefined;
+      const amountChanged = newAmount !== undefined && newAmount !== Number(originalAmount);
 
-      // Update linked daybook entry amount (use voucherId — already an ObjectId, no casting needed)
-      if (voucherId) {
-        const daybookResult = await Daybook.updateMany(
-          { voucherId, isDeleted: { $ne: true } },
-          { $set: { amount: newAmount } }
-        );
-        console.log('[payment.update] Daybook.updateMany result:', daybookResult);
-
-        await Voucher.findByIdAndUpdate(voucherId, { $set: { amount: newAmount } });
-      } else {
-        console.log('[payment.update] WARNING: voucherId is null/undefined — skipping daybook/cashbook update');
+      // Sync voucher with all updated fields
+      const voucherUpdate = {};
+      if (newAmount !== undefined) voucherUpdate.amount = newAmount;
+      if (data.paymentMode !== undefined) voucherUpdate.paymentMode = data.paymentMode;
+      if (data.transactionRef !== undefined) voucherUpdate.transactionRef = data.transactionRef;
+      if (data.paymentDate !== undefined) voucherUpdate.voucherDate = data.paymentDate;
+      if (data.notes !== undefined) voucherUpdate.notes = data.notes;
+      if (Object.keys(voucherUpdate).length > 0) {
+        await Voucher.findByIdAndUpdate(voucherId, { $set: voucherUpdate });
       }
 
-      // Update linked cashbook entry and recalculate balances
-      if (voucherId) {
+      // Sync Daybook entries linked via voucherId
+      const daybookUpdate = {};
+      if (newAmount !== undefined) daybookUpdate.amount = newAmount;
+      if (data.paymentDate !== undefined) daybookUpdate.date = data.paymentDate;
+      if (data.transactionRef !== undefined) daybookUpdate.transactionRef = data.transactionRef;
+      if (data.account !== undefined) daybookUpdate.account = data.account;
+      if (Object.keys(daybookUpdate).length > 0) {
+        await Daybook.updateMany(
+          { voucherId, isDeleted: { $ne: true } },
+          { $set: daybookUpdate }
+        );
+      }
+
+      // Sync Cashbook entries linked via voucherId
+      const cashbookUpdate = {};
+      if (data.paymentDate !== undefined) cashbookUpdate.date = data.paymentDate;
+      if (amountChanged) {
         const isPaidOut = originalPayerType === "Consultancy";
         if (isPaidOut) {
-          const cbResult = await Cashbook.updateMany(
-            { voucherId, isDeleted: { $ne: true } },
-            { $set: { debited: newAmount, credited: 0 } }
-          );
-          console.log('[payment.update] Cashbook.updateMany (debit) result:', cbResult);
+          cashbookUpdate.debited = newAmount;
+          cashbookUpdate.credited = 0;
         } else {
-          const cbResult = await Cashbook.updateMany(
-            { voucherId, isDeleted: { $ne: true } },
-            { $set: { credited: newAmount, debited: 0 } }
-          );
-          console.log('[payment.update] Cashbook.updateMany (credit) result:', cbResult);
+          cashbookUpdate.credited = newAmount;
+          cashbookUpdate.debited = 0;
         }
-        await this._recalculateCashbookBalances(branchId);
       }
-    } else {
-      console.log('[payment.update] amount unchanged or not in payload — no cascade');
+      if (Object.keys(cashbookUpdate).length > 0) {
+        await Cashbook.updateMany(
+          { voucherId, isDeleted: { $ne: true } },
+          { $set: cashbookUpdate }
+        );
+        if (amountChanged) {
+          await this._recalculateCashbookBalances(branchId);
+        }
+      }
     }
 
     // Always recalculate admission summary — amount, serviceChargeDeducted,
