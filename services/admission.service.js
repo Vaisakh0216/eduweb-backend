@@ -276,7 +276,7 @@ class AdmissionService {
           agentFeeDeducted: {
             $sum: { $ifNull: ['$agentFeeDeducted', 0] },
           },
-          // Amount received from agent (after deducting fee)
+          // Amount received from agent (after deducting their fee)
           agentToConsultancy: {
             $sum: {
               $cond: [
@@ -284,23 +284,6 @@ class AdmissionService {
                   $and: [
                     { $eq: ['$payerType', 'Agent'] },
                     { $eq: ['$receiverType', 'Consultancy'] },
-                  ],
-                },
-                '$amount',
-                0,
-              ],
-            },
-          },
-          // Agent → Consultancy where agent collected this from the student
-          // (counts toward student's paid total — agent was the collection intermediary)
-          agentCollectionFromStudent: {
-            $sum: {
-              $cond: [
-                {
-                  $and: [
-                    { $eq: ['$payerType', 'Agent'] },
-                    { $eq: ['$receiverType', 'Consultancy'] },
-                    { $eq: ['$isAgentCollection', true] },
                   ],
                 },
                 '$amount',
@@ -384,15 +367,17 @@ class AdmissionService {
     const stats = paymentStats[0] || {};
 
     // CORRECT CALCULATION:
-    // Student Paid = All payments made by student (to Consultancy + to Agent + to College)
-    //              + Agent → Consultancy where agent was collecting on behalf of student
-    // Note: agentCollectionFromStudent is only added when isAgentCollection=true to avoid
-    // double-counting with studentToAgent (if both are recorded for the same transaction).
-    const agentCollectionExtra = Math.max(
-      0,
-      (stats.agentCollectionFromStudent || 0) - (stats.studentToAgent || 0)
-    );
-    const studentPaid = (stats.studentToConsultancy || 0) + (stats.studentToAgent || 0) + (stats.studentToCollege || 0) + agentCollectionExtra;
+    // Student Paid = direct student payments + agent-collected student money
+    //
+    // Agent → Consultancy represents money originally from the student (agent collected it).
+    // agentFeeDeducted is the fee the agent kept, so total from student via agent =
+    //   agentToConsultancy + agentFeeDeducted
+    //
+    // Use max(studentToAgent, agentViaStudent) to avoid double-counting when both
+    // "Student → Agent" and "Agent → Consultancy" are recorded for the same transaction.
+    const agentViaStudent = (stats.agentToConsultancy || 0) + (stats.agentFeeDeducted || 0);
+    const agentContribution = Math.max(stats.studentToAgent || 0, agentViaStudent);
+    const studentPaid = (stats.studentToConsultancy || 0) + (stats.studentToCollege || 0) + agentContribution;
     admission.paymentSummary.studentPaid = studentPaid;
     
     // Agent fee calculation:
