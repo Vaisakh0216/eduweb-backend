@@ -28,7 +28,7 @@ class JournalService {
   }
 
   async findByAdmission(admissionId) {
-    return Journal.find({ admissionId })
+    return Journal.find({ admissionId, type: JOURNAL_TYPES.SC_COLLECTED_BY_AGENT })
       .populate('agentId', 'name agentType')
       .populate('createdBy', 'firstName lastName')
       .sort({ journalDate: -1 });

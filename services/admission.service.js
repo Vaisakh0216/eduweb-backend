@@ -396,6 +396,9 @@ class AdmissionService {
     const journalCollectedTotal = journalPerAgent.reduce((sum, j) => sum + j.total, 0);
     admission.serviceCharge.collectedByAgent = journalCollectedTotal;
 
+    // SC collected by agent came out of the student's pocket — add to studentPaid
+    admission.paymentSummary.studentPaid = studentPaid + journalCollectedTotal;
+
     // Update service charge tracking
     // Service charge comes from:
     // 1. College paying service charge directly

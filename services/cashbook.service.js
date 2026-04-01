@@ -1,4 +1,6 @@
 const Cashbook = require("../models/Cashbook");
+const Voucher = require("../models/Voucher");
+const Daybook = require("../models/Daybook");
 const AppError = require("../utils/AppError");
 const {
   getPaginationOptions,
@@ -190,6 +192,19 @@ class CashbookService {
     entry.deletedAt = new Date();
     entry.deletedBy = deletedBy;
     await entry.save();
+
+    // Cascade: delete related voucher and daybook entries
+    if (entry.voucherId) {
+      await Voucher.findByIdAndUpdate(entry.voucherId, {
+        isDeleted: true,
+        deletedAt: new Date(),
+        deletedBy,
+      });
+      await Daybook.updateMany(
+        { voucherId: entry.voucherId, isDeleted: { $ne: true } },
+        { isDeleted: true, deletedAt: new Date(), deletedBy }
+      );
+    }
 
     return true;
   }
