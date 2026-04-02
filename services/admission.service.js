@@ -1,5 +1,6 @@
 const Admission = require('../models/Admission');
 const Payment = require('../models/Payment');
+const Daybook = require('../models/Daybook');
 const AgentPayment = require('../models/AgentPayment');
 const Journal = require('../models/Journal');
 const Voucher = require('../models/Voucher');
