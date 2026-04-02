@@ -226,6 +226,16 @@ class AdmissionService {
       { $set: { account: 'Bank' } }
     );
 
+    // Sync Daybook account field to match the linked Payment's paymentMode
+    const admissionPayments = await Payment.find({ admissionId: admissionObjectId, isDeleted: false });
+    for (const payment of admissionPayments) {
+      const daybookAccount = payment.paymentMode === 'Cash' ? 'Cash' : 'Bank';
+      await Daybook.updateMany(
+        { paymentId: payment._id, isDeleted: false },
+        { $set: { account: daybookAccount } }
+      );
+    }
+
     // Calculate payments aggregation
     const paymentStats = await Payment.aggregate([
       {

@@ -359,12 +359,12 @@ class DashboardService {
       'service_charge_income',
     ];
 
-    // Get bank transactions from daybook — exclude Cash only so "Bank", "UPI", "BankTransfer", etc. are all captured
+    // Get bank transactions from daybook — Daybook uses 'account' field ('Bank'/'Cash'), not paymentMode
     const bankTransactions = await Daybook.aggregate([
       {
         $match: {
           ...matchFilter,
-          paymentMode: { $nin: ['Cash'] },
+          account: 'Bank',
         }
       },
       {
