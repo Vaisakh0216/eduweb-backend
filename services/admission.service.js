@@ -439,7 +439,9 @@ class AdmissionService {
     // 2. Consultancy deducting from student payments
     // 3. Agent deducting fee (agent fee is part of service charge commitment)
     admission.serviceCharge.receivedFromCollege = stats.serviceChargeFromCollege || 0;
-    admission.serviceCharge.deductedFromStudent = stats.serviceChargeDeducted || 0;
+    // Journal collectedByAgent is an adjustment: the agent collected a portion of SC from the student
+    // that was already included in the payment's serviceChargeDeducted — subtract to avoid double-counting
+    admission.serviceCharge.deductedFromStudent = Math.max(0, (stats.serviceChargeDeducted || 0) - journalCollectedTotal);
     admission.serviceCharge.deductedByAgent = stats.agentFeeDeducted || 0;
     
     // Calculate how much of the "paid to college" is from the deducted service charge
