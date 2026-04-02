@@ -216,6 +216,16 @@ class AdmissionService {
     // Convert admissionId to ObjectId for aggregation
     const admissionObjectId = new mongoose.Types.ObjectId(admissionId);
 
+    // Fix account field on all payments: Cash → 'Cash', everything else → 'Bank'
+    await Payment.updateMany(
+      { admissionId: admissionObjectId, isDeleted: false, paymentMode: 'Cash' },
+      { $set: { account: 'Cash' } }
+    );
+    await Payment.updateMany(
+      { admissionId: admissionObjectId, isDeleted: false, paymentMode: { $ne: 'Cash' } },
+      { $set: { account: 'Bank' } }
+    );
+
     // Calculate payments aggregation
     const paymentStats = await Payment.aggregate([
       {

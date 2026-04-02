@@ -359,12 +359,12 @@ class DashboardService {
       'service_charge_income',
     ];
 
-    // Get bank transactions from daybook (non-cash payments)
+    // Get bank transactions from daybook — exclude Cash only so "Bank", "UPI", "BankTransfer", etc. are all captured
     const bankTransactions = await Daybook.aggregate([
       {
         $match: {
           ...matchFilter,
-          paymentMode: { $in: ['UPI', 'BankTransfer', 'Card', 'Cheque'] }
+          paymentMode: { $nin: ['Cash'] },
         }
       },
       {
@@ -400,28 +400,7 @@ class DashboardService {
       if (item._id === 'expense') bankExpense = item.total;
     });
 
-    // Also add payments received via bank (from Payment collection)
-    const paymentBankIncome = await Payment.aggregate([
-      {
-        $match: {
-          isDeleted: false,
-          receiverType: 'Consultancy',
-          paymentMode: { $in: ['UPI', 'BankTransfer', 'Card', 'Cheque'] },
-          ...(specificBranchId ? { branchId: new mongoose.Types.ObjectId(specificBranchId) } : 
-              (branchFilter.branchId ? { branchId: branchFilter.branchId } : {}))
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$amount' }
-        }
-      }
-    ]);
-
-    const totalBankIncome = bankIncome + (paymentBankIncome[0]?.total || 0);
-    
-    return totalBankIncome - bankExpense;
+    return bankIncome - bankExpense;
   }
 
   async getMonthlyTrend(query, user) {
