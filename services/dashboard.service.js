@@ -94,15 +94,18 @@ class DashboardService {
       daybookMatch.admissionId = { $in: admissionIds };
     }
 
-    // Operating expense categories — regular business costs, excludes college/agent payouts
+    // Consultant commission categories — agent/consultant payouts
+    const consultantCommissionCategories = ['paid_to_agent', 'agent_commission', 'sub_agent_commission'];
+
+    // Operating expense categories — overhead costs only, excludes consultant payouts
     const operatingExpenseCategories = [
       'electricity_bill', 'water_bill', 'office_rent', 'salary', 'misc',
       'wifi_phone_bill', 'recharge', 'food_refreshment', 'stationery', 'printing',
       'maintenance', 'advertisement_marketing', 'college_visit', 'field_work',
-      'data_collection', 'agent_commission', 'sub_agent_commission', 'donation', 'paid_to_agent',
+      'data_collection', 'donation',
     ];
 
-    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult] = await Promise.all([
+    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult, consultantCommResult] = await Promise.all([
       // Service Revenue = sum of serviceChargeDeducted from all payments
       Payment.aggregate([
         { $match: paymentMatch },
@@ -115,8 +118,7 @@ class DashboardService {
         { $group: { _id: null, total: { $sum: '$amountDueToCollege' } } },
       ]),
 
-      // Operating Expenses = all expense categories from Daybook
-      // (paid_to_agent entries are created automatically by the Payment service when paying agents)
+      // Operating Expenses = overhead costs only (not consultant commissions)
       Daybook.aggregate([
         { $match: { ...daybookMatch, category: { $in: operatingExpenseCategories } } },
         { $group: { _id: null, total: { $sum: '$amount' } } },
@@ -127,18 +129,36 @@ class DashboardService {
         { $match: { ...daybookMatch, category: 'paid_to_college' } },
         { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
+
+      // Consultant Commission = paid_to_agent daybook entries + agentFeeDeducted from payments
+      Promise.all([
+        Daybook.aggregate([
+          { $match: { ...daybookMatch, category: { $in: consultantCommissionCategories } } },
+          { $group: { _id: null, total: { $sum: '$amount' } } },
+        ]),
+        Payment.aggregate([
+          { $match: paymentMatch },
+          { $group: { _id: null, total: { $sum: '$agentFeeDeducted' } } },
+        ]),
+      ]),
     ]);
 
     const serviceRevenue = serviceRevenueResult[0]?.total || 0;
     const feeIncome = feeIncomeResult[0]?.total || 0;
     const operatingExpenses = opExpResult[0]?.total || 0;
     const feePaidToCollege = feePaidResult[0]?.total || 0;
+    const consultantCommission =
+      (consultantCommResult[0][0]?.total || 0) + (consultantCommResult[1][0]?.total || 0);
+    const grossProfit = serviceRevenue - consultantCommission;
+    const netProfit = grossProfit - operatingExpenses;
 
     return {
       businessProfit: {
         serviceRevenue,
+        consultantCommission,
+        grossProfit,
         operatingExpenses,
-        netProfit: serviceRevenue - operatingExpenses,
+        netProfit,
       },
       feeManagement: {
         feeIncome,

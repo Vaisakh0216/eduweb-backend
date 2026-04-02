@@ -18,6 +18,7 @@ module.exports = {
     'Walk-in',
     'Reference',
     'Advertisement',
+    'Telecaller',
     'Other',
   ],
 

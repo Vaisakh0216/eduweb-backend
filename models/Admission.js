@@ -37,6 +37,10 @@ const admissionSchema = new mongoose.Schema(
       type: String,
       enum: REFERRAL_SOURCES,
     },
+    telecallerName: {
+      type: String,
+      trim: true,
+    },
 
     // Student Details
     student: {
