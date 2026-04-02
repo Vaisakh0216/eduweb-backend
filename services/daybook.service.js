@@ -587,7 +587,7 @@ class DaybookService {
   }
 
   async setOpeningBalance(data, userId) {
-    const { branchId, amount, date, description } = data;
+    const { branchId, amount, date, description, account = 'Cash' } = data;
 
     // Remove any existing opening balance for this branch
     const existing = await Daybook.find({ branchId, category: 'opening_balance', isDeleted: false });
@@ -608,7 +608,7 @@ class DaybookService {
       branchId,
       category: 'opening_balance',
       transactionType: 'asset',
-      account: 'Cash',
+      account,
       amount,
       description: description || 'Opening Balance',
       createdBy: userId,
@@ -631,24 +631,27 @@ class DaybookService {
     entry.voucherId = voucher._id;
     await entry.save();
 
-    // Create cashbook entry — treated as a credit (cash comes in)
-    const lastCashEntry = await Cashbook.findOne({ branchId, isDeleted: false })
-      .sort({ date: -1, createdAt: -1 });
-    const runningBalance = (lastCashEntry?.runningBalance || 0) + amount;
-    await Cashbook.create({
-      date: entryDate,
-      branchId,
-      category: 'opening_balance',
-      description: description || 'Opening Balance',
-      credited: amount,
-      debited: 0,
-      runningBalance,
-      voucherId: voucher._id,
-      daybookId: entry._id,
-      createdBy: userId,
-    });
+    // Only create cashbook entry for Cash opening balance
+    // Bank opening balance is tracked via Daybook account:'Bank' in getBankBalance
+    if (account === 'Cash') {
+      const lastCashEntry = await Cashbook.findOne({ branchId, isDeleted: false })
+        .sort({ date: -1, createdAt: -1 });
+      const runningBalance = (lastCashEntry?.runningBalance || 0) + amount;
+      await Cashbook.create({
+        date: entryDate,
+        branchId,
+        category: 'opening_balance',
+        description: description || 'Opening Balance',
+        credited: amount,
+        debited: 0,
+        runningBalance,
+        voucherId: voucher._id,
+        daybookId: entry._id,
+        createdBy: userId,
+      });
+      await this._recalculateCashbookBalances(branchId);
+    }
 
-    await this._recalculateCashbookBalances(branchId);
     return entry;
   }
 
