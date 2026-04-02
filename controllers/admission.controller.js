@@ -207,6 +207,50 @@ const getDocument = async (req, res, next) => {
   }
 };
 
+const Comment = require('../models/Comment');
+
+const getComments = async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ admissionId: req.params.id })
+      .populate('createdBy', 'firstName lastName role')
+      .sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: comments });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addComment = async (req, res, next) => {
+  try {
+    const comment = await Comment.create({
+      admissionId: req.params.id,
+      text: req.body.text,
+      createdBy: req.user._id,
+    });
+    await comment.populate('createdBy', 'firstName lastName role');
+    res.status(201).json({ success: true, data: comment });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteComment = async (req, res, next) => {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comment not found' });
+    if (
+      comment.createdBy.toString() !== req.user._id.toString() &&
+      !['superadmin', 'admin'].includes(req.user.role)
+    ) {
+      return res.status(403).json({ success: false, message: 'Not allowed to delete this comment' });
+    }
+    await comment.deleteOne();
+    res.status(200).json({ success: true, message: 'Comment deleted' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   findAll,
@@ -218,4 +262,7 @@ module.exports = {
   addDocument,
   removeDocument,
   getDocument,
+  getComments,
+  addComment,
+  deleteComment,
 };

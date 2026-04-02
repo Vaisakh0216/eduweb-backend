@@ -622,6 +622,11 @@ class PaymentService {
       data.payerType === PAYER_TYPES.STUDENT &&
       data.receiverType === RECEIVER_TYPES.AGENT;
 
+    // College paying service charge to Consultancy
+    const isCollegeToConsultancy =
+      data.payerType === PAYER_TYPES.COLLEGE &&
+      data.receiverType === RECEIVER_TYPES.CONSULTANCY;
+
     console.log("Is Student to Consultancy payment:", isStudentToConsultancy);
     console.log("Is Agent to Consultancy payment:", isAgentToConsultancy);
     console.log("Is Student to Agent payment:", isStudentToAgent);
@@ -721,6 +726,12 @@ class PaymentService {
     // Student to Agent - no amount due to college yet (will be calculated when agent transfers)
     if (isStudentToAgent) {
       console.log("Student to Agent payment - no college dues calculated yet");
+    }
+
+    // College to Consultancy — mark serviceChargeDeducted so dashboard Service Revenue counts it
+    if (isCollegeToConsultancy && data.isServiceChargePayment === true) {
+      serviceChargeDeducted = data.amount;
+      amountDueToCollege = 0;
     }
 
     console.log(

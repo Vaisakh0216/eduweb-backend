@@ -217,6 +217,19 @@ class AdmissionService {
     // Convert admissionId to ObjectId for aggregation
     const admissionObjectId = new mongoose.Types.ObjectId(admissionId);
 
+    // Fix College→Consultancy SC payments: if isServiceChargePayment is true but serviceChargeDeducted=0, sync it
+    await Payment.updateMany(
+      {
+        admissionId: admissionObjectId,
+        isDeleted: false,
+        payerType: 'College',
+        receiverType: 'Consultancy',
+        isServiceChargePayment: true,
+        serviceChargeDeducted: 0,
+      },
+      [{ $set: { serviceChargeDeducted: '$amount' } }]
+    );
+
     // Fix account field on all payments: Cash → 'Cash', everything else → 'Bank'
     await Payment.updateMany(
       { admissionId: admissionObjectId, isDeleted: false, paymentMode: 'Cash' },

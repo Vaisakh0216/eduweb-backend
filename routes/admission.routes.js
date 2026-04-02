@@ -71,4 +71,9 @@ router.delete(
   admissionController.removeDocument
 );
 
+// Comments (non-staff only — enforced in frontend; backend open to all authenticated)
+router.get('/:id/comments', admissionController.getComments);
+router.post('/:id/comments', admissionController.addComment);
+router.delete('/:id/comments/:commentId', admissionController.deleteComment);
+
 module.exports = router;
