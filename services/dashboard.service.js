@@ -370,16 +370,14 @@ class DashboardService {
       {
         $addFields: {
           computedType: {
-            $cond: {
-              if: { $ifNull: ['$transactionType', false] },
-              then: '$transactionType',
-              else: {
-                $cond: {
-                  if: { $in: ['$category', bankIncomeCategories] },
-                  then: 'income',
-                  else: 'expense',
-                },
-              },
+            $switch: {
+              branches: [
+                { case: { $eq: ['$transactionType', 'income'] }, then: 'income' },
+                { case: { $eq: ['$transactionType', 'asset'] }, then: 'income' },
+                { case: { $eq: ['$transactionType', 'expense'] }, then: 'expense' },
+                { case: { $in: ['$category', bankIncomeCategories] }, then: 'income' },
+              ],
+              default: 'expense',
             },
           },
         },
