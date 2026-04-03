@@ -1,5 +1,6 @@
 const fs = require('fs');
 const admissionService = require('../services/admission.service');
+const paymentService = require('../services/payment.service');
 const Admission = require('../models/Admission');
 const { getSignedFileUrl } = require('../utils/s3');
 
@@ -103,6 +104,10 @@ const recalculateSummary = async (req, res, next) => {
   try {
     await admissionService.updatePaymentSummary(req.params.id, {});
     const admission = await admissionService.findById(req.params.id);
+    // Also fix cashbook running balances for this branch
+    if (admission && admission.branchId) {
+      await paymentService.recalculateCashbookBalances(admission.branchId);
+    }
 
     res.status(200).json({
       success: true,

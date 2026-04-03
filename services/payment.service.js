@@ -1183,12 +1183,16 @@ class PaymentService {
         { voucherId: payment.voucherId, isDeleted: { $ne: true } },
         { $set: { isDeleted: true, deletedAt: new Date(), deletedBy } }
       );
-      await this._recalculateCashbookBalances(payment.branchId);
     }
+    await this._recalculateCashbookBalances(payment.branchId);
 
     await admissionService.updatePaymentSummary(payment.admissionId);
 
     return true;
+  }
+
+  async recalculateCashbookBalances(branchId) {
+    return this._recalculateCashbookBalances(branchId);
   }
 
   async _recalculateCashbookBalances(branchId) {
