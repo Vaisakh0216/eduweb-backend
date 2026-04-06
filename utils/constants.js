@@ -106,6 +106,16 @@ module.exports = {
     'sub_agent_commission',
     'donation',
     'investment',
+    'capital_owner',
+    'capital_partner',
+    'loan_from_owner',
+    'loan_from_others',
+    'loan_from_bank',
+    'loan_repayment_owner',
+    'loan_repayment_others',
+    'loan_repayment_bank',
+    'capital_withdrawal_owner',
+    'capital_withdrawal_partner',
   ],
 
   DAYBOOK_CATEGORIES_CONFIG: {
@@ -134,6 +144,16 @@ module.exports = {
     sub_agent_commission: { type: 'expense' },
     donation: { type: 'expense' },
     investment: { type: 'asset' },
+    capital_owner: { type: 'income' },
+    capital_partner: { type: 'income' },
+    loan_from_owner: { type: 'income' },
+    loan_from_others: { type: 'income' },
+    loan_from_bank: { type: 'income' },
+    loan_repayment_owner: { type: 'expense' },
+    loan_repayment_others: { type: 'expense' },
+    loan_repayment_bank: { type: 'expense' },
+    capital_withdrawal_owner: { type: 'expense' },
+    capital_withdrawal_partner: { type: 'expense' },
   },
 
   JOURNAL_TYPES: {

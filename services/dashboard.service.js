@@ -21,6 +21,7 @@ class DashboardService {
       bankBalance,
       serviceRevenueSummary,
       consultantCommissionSummary,
+      loanSummary,
     ] = await Promise.all([
       this.getFinancialBreakdown(branchFilter, dateFilter, academicYear),
       this.getAdmissionStats(branchFilter, dateFilter, academicYear),
@@ -31,6 +32,7 @@ class DashboardService {
       this.getBankBalance(branchFilter, query.branchId),
       this.getServiceRevenueSummary(branchFilter, dateFilter, academicYear),
       this.getConsultantCommissionSummary(branchFilter, dateFilter, academicYear),
+      this.getLoanSummary(branchFilter),
     ]);
 
     return {
@@ -45,6 +47,7 @@ class DashboardService {
       cashInBank: bankBalance,
       serviceRevenue: serviceRevenueSummary,
       consultantCommission: consultantCommissionSummary,
+      loans: loanSummary,
     };
   }
 
@@ -610,6 +613,117 @@ class DashboardService {
       total,
       paid,
       payable: Math.max(0, total - paid),
+    };
+  }
+
+  async getLoanSummary(branchFilter) {
+    const matchFilter = { isDeleted: false, ...branchFilter };
+
+    const loanCategories = [
+      'loan_from_owner',
+      'loan_from_others',
+      'loan_from_bank',
+      'capital_owner',
+      'capital_partner',
+    ];
+    const repaymentCategories = [
+      'loan_repayment_owner',
+      'loan_repayment_others',
+      'loan_repayment_bank',
+      'capital_withdrawal_owner',
+      'capital_withdrawal_partner',
+    ];
+
+    const categoryLabels = {
+      loan_from_owner: 'Loan from Owner',
+      loan_from_others: 'Loan from Others',
+      loan_from_bank: 'Loan from Bank',
+      capital_owner: 'Owner Contribution',
+      capital_partner: 'Partner Contribution',
+      loan_repayment_owner: 'Repayment to Owner',
+      loan_repayment_others: 'Repayment to Others',
+      loan_repayment_bank: 'Repayment to Bank',
+      capital_withdrawal_owner: 'Owner Withdrawal',
+      capital_withdrawal_partner: 'Partner Withdrawal',
+    };
+
+    const [loanEntries, repaymentEntries] = await Promise.all([
+      Daybook.find({ ...matchFilter, category: { $in: loanCategories } })
+        .populate('branchId', 'name code')
+        .sort({ date: -1 })
+        .lean(),
+      Daybook.find({ ...matchFilter, category: { $in: repaymentCategories } })
+        .populate('branchId', 'name code')
+        .sort({ date: -1 })
+        .lean(),
+    ]);
+
+    const totalTaken = loanEntries.reduce((sum, e) => sum + (e.amount || 0), 0);
+    const totalRepaid = repaymentEntries.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+    // Per-source breakdown
+    const breakdown = {};
+    loanCategories.forEach((cat) => {
+      breakdown[cat] = { label: categoryLabels[cat], taken: 0, repaid: 0, outstanding: 0, entries: [] };
+    });
+
+    loanEntries.forEach((e) => {
+      if (breakdown[e.category]) {
+        breakdown[e.category].taken += e.amount || 0;
+        breakdown[e.category].entries.push({
+          _id: e._id,
+          date: e.date,
+          amount: e.amount,
+          description: e.description || '',
+          paidTo: e.paidTo || '',
+          account: e.account || 'Cash',
+          branch: e.branchId?.name || '',
+          type: 'taken',
+        });
+      }
+    });
+
+    // Map repayments back to their corresponding loan source
+    const repaymentMap = {
+      loan_repayment_owner: 'loan_from_owner',
+      loan_repayment_bank: 'loan_from_bank',
+      loan_repayment_others: 'loan_from_others',
+      capital_withdrawal_owner: 'capital_owner',
+      capital_withdrawal_partner: 'capital_partner',
+    };
+
+    repaymentEntries.forEach((e) => {
+      const loanCat = repaymentMap[e.category];
+      if (loanCat && breakdown[loanCat]) {
+        breakdown[loanCat].repaid += e.amount || 0;
+        breakdown[loanCat].entries.push({
+          _id: e._id,
+          date: e.date,
+          amount: e.amount,
+          description: e.description || '',
+          paidTo: e.paidTo || '',
+          account: e.account || 'Cash',
+          branch: e.branchId?.name || '',
+          type: 'repaid',
+        });
+      }
+    });
+
+    // Compute outstanding per source
+    Object.keys(breakdown).forEach((cat) => {
+      breakdown[cat].outstanding = breakdown[cat].taken - breakdown[cat].repaid;
+      // Sort entries by date desc
+      breakdown[cat].entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+    });
+
+    // Filter out sources with no activity
+    const activeSources = Object.values(breakdown).filter((s) => s.taken > 0 || s.repaid > 0);
+
+    return {
+      totalTaken,
+      totalRepaid,
+      outstanding: totalTaken - totalRepaid,
+      sources: activeSources,
     };
   }
 
