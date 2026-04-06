@@ -681,8 +681,15 @@ class DaybookService {
 
     let totalIncome = 0;
     let totalExpense = 0;
+    let openingBalance = 0;
 
     entries.forEach((entry) => {
+      // Opening balance entries are always identified by category
+      if (entry.category === 'opening_balance') {
+        openingBalance += entry.amount;
+        return;
+      }
+
       const type =
         entry.transactionType ||
         DAYBOOK_CATEGORIES_CONFIG[entry.category]?.type ||
@@ -693,13 +700,17 @@ class DaybookService {
       } else if (type === "expense") {
         totalExpense += entry.amount;
       }
-      // transfer and asset types are excluded from income/expense totals
+      // transfer and asset types are excluded from all totals
     });
+
+    const closingBalance = openingBalance + totalIncome - totalExpense;
 
     return {
       totalIncome,
       totalExpense,
       netProfit: totalIncome - totalExpense,
+      openingBalance,
+      closingBalance,
     };
   }
 
