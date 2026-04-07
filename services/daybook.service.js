@@ -711,11 +711,11 @@ class DaybookService {
     let totalExpense = 0;
 
     entries.forEach((entry) => {
-      // When a startDate is set, opening_balance entries within the period are
-      // already folded into the opening balance via the "before" query — skip them.
-      // When there is NO date filter, count opening_balance entries as the opening balance.
+      // Opening balance entries in the period are always added to openingBalance.
+      // No double-counting: the "before" query uses $lt (strictly less than startDate),
+      // so an OB entry dated exactly on startDate only appears here, not in beforeEntries.
       if (entry.category === 'opening_balance') {
-        if (!startDate) openingBalance += entry.amount;
+        openingBalance += entry.amount;
         return;
       }
 
