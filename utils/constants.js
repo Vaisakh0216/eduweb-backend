@@ -116,6 +116,7 @@ module.exports = {
     'loan_repayment_bank',
     'capital_withdrawal_owner',
     'capital_withdrawal_partner',
+    'internal_transfer',
   ],
 
   DAYBOOK_CATEGORIES_CONFIG: {
@@ -154,6 +155,7 @@ module.exports = {
     loan_repayment_bank: { type: 'expense' },
     capital_withdrawal_owner: { type: 'expense' },
     capital_withdrawal_partner: { type: 'expense' },
+    internal_transfer: { type: 'transfer' },
   },
 
   JOURNAL_TYPES: {

@@ -358,21 +358,31 @@ class DaybookService {
     // 1. account=Cash (or unset): normal income/expense — update Cash balance.
     // 2. account=Petty Cash + transactionType=transfer + paymentMode=Cash:
     //    Cash is being moved OUT to Petty Cash — debit Cash balance.
-    // 3. account=Petty Cash expenses or Bank entries: no cashbook entry needed.
+    // 3. internal_transfer: always touch cashbook (cash_to_bank debits cash, bank_to_cash credits cash).
+    // 4. account=Petty Cash expenses or Bank entries: no cashbook entry needed.
     const isCashAccount = !data.account || data.account === "Cash";
     const isPettyCashFromCash =
       data.account === "Petty Cash" &&
       data.transactionType === "transfer" &&
       (!data.paymentMode || data.paymentMode === "Cash");
+    const isInternalTransfer = data.category === "internal_transfer";
 
-    if (isCashAccount || isPettyCashFromCash) {
+    if (isCashAccount || isPettyCashFromCash || isInternalTransfer) {
       const lastCashEntry = await Cashbook.findOne({ branchId: data.branchId })
         .sort({ date: -1, createdAt: -1 });
 
       let credited = 0;
       let debited = 0;
 
-      if (isCashAccount) {
+      if (isInternalTransfer) {
+        // transactionType='income' = cash→bank: debit cash (cash decreases)
+        // transactionType='expense' = bank→cash: credit cash (cash increases)
+        if (type === "income") {
+          debited = data.amount;
+        } else {
+          credited = data.amount;
+        }
+      } else if (isCashAccount) {
         credited = type === "income" ? data.amount : 0;
         debited = type === "expense" ? data.amount : 0;
       } else {
@@ -691,6 +701,7 @@ class DaybookService {
           openingBalance += entry.amount;
           return;
         }
+        if (entry.category === 'internal_transfer') return;
         const type = computeType(entry);
         if (type === 'income') openingBalance += entry.amount;
         else if (type === 'expense') openingBalance -= entry.amount;
@@ -718,6 +729,8 @@ class DaybookService {
         openingBalance += entry.amount;
         return;
       }
+      // Internal transfers don't affect P&L — they just move money between accounts.
+      if (entry.category === 'internal_transfer') return;
 
       const type = computeType(entry);
       if (type === 'income') totalIncome += entry.amount;
