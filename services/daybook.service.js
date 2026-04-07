@@ -667,40 +667,62 @@ class DaybookService {
   async getSummary(query = {}) {
     const { branchId, startDate, endDate } = query;
 
-    const filter = { isDeleted: false };
+    const baseFilter = { isDeleted: false };
+    if (branchId) baseFilter.branchId = branchId;
 
-    if (branchId) filter.branchId = branchId;
+    const computeType = (entry) =>
+      entry.transactionType ||
+      DAYBOOK_CATEGORIES_CONFIG[entry.category]?.type ||
+      'expense';
 
-    if (startDate || endDate) {
-      filter.date = {};
-      if (startDate) filter.date.$gte = new Date(startDate);
-      if (endDate) filter.date.$lte = new Date(endDate);
+    let openingBalance = 0;
+
+    if (startDate) {
+      // Opening balance for the period = cumulative balance of ALL entries
+      // strictly before the start date (opening_balance entries + net income/expense).
+      // This is equivalent to the closing balance of the previous period.
+      const beforeEntries = await Daybook.find({
+        ...baseFilter,
+        date: { $lt: new Date(startDate) },
+      });
+
+      beforeEntries.forEach((entry) => {
+        if (entry.category === 'opening_balance') {
+          openingBalance += entry.amount;
+          return;
+        }
+        const type = computeType(entry);
+        if (type === 'income') openingBalance += entry.amount;
+        else if (type === 'expense') openingBalance -= entry.amount;
+      });
     }
 
-    const entries = await Daybook.find(filter);
+    // Fetch entries for the selected period
+    const periodFilter = { ...baseFilter };
+    if (startDate || endDate) {
+      periodFilter.date = {};
+      if (startDate) periodFilter.date.$gte = new Date(startDate);
+      if (endDate) periodFilter.date.$lte = new Date(endDate);
+    }
+
+    const entries = await Daybook.find(periodFilter);
 
     let totalIncome = 0;
     let totalExpense = 0;
-    let openingBalance = 0;
 
     entries.forEach((entry) => {
-      // Opening balance entries are always identified by category
+      // When a startDate is set, opening_balance entries within the period are
+      // already folded into the opening balance via the "before" query — skip them.
+      // When there is NO date filter, count opening_balance entries as the opening balance.
       if (entry.category === 'opening_balance') {
-        openingBalance += entry.amount;
+        if (!startDate) openingBalance += entry.amount;
         return;
       }
 
-      const type =
-        entry.transactionType ||
-        DAYBOOK_CATEGORIES_CONFIG[entry.category]?.type ||
-        "expense";
-
-      if (type === "income") {
-        totalIncome += entry.amount;
-      } else if (type === "expense") {
-        totalExpense += entry.amount;
-      }
-      // transfer and asset types are excluded from all totals
+      const type = computeType(entry);
+      if (type === 'income') totalIncome += entry.amount;
+      else if (type === 'expense') totalExpense += entry.amount;
+      // transfer and asset types excluded from totals
     });
 
     const closingBalance = openingBalance + totalIncome - totalExpense;
