@@ -449,21 +449,23 @@ admissionSchema.pre('save', function (next) {
     (fees.tuitionFeeYear1 || 0);
 
   // Calculate service charge totals
-  // Total received = from college + deducted from student + deducted by agent - paid back to college
-  // If you deduct ₹1000 as SC but then pay that ₹1000 to college, net SC received = 0
+  // Net Received = SC directly collected by consultancy (from college, deducted from student, deducted by agent, minus paid back)
+  // collectedByAgent = SC held by agent (separate from above — agent collected from student outside payments)
+  // Due = agreed - received - collectedByAgent  (both must be accounted for to clear the due)
   const grossReceived =
     (this.serviceCharge.receivedFromCollege || 0) +
     (this.serviceCharge.deductedFromStudent || 0) +
-    (this.serviceCharge.deductedByAgent || 0) +
-    (this.serviceCharge.collectedByAgent || 0);
-  
+    (this.serviceCharge.deductedByAgent || 0);
+
   const paidBack = this.serviceCharge.paidBackToCollege || 0;
-  
+
   this.serviceCharge.received = Math.max(0, grossReceived - paidBack);
 
-  // Service charge due = agreed - net received
+  // Service charge due = agreed - directly received - agent-held (agent SC is committed, not yet remitted)
   this.serviceCharge.due = Math.max(0,
-    (this.serviceCharge.agreed || 0) - (this.serviceCharge.received || 0));
+    (this.serviceCharge.agreed || 0) -
+    (this.serviceCharge.received || 0) -
+    (this.serviceCharge.collectedByAgent || 0));
 
   // Calculate college payment tracking
   // When student pays to consultancy, consultancy owes college the amount minus service charge
