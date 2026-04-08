@@ -111,7 +111,12 @@ class DashboardService {
       'data_collection', 'donation',
     ];
 
-    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult, consultantCommResult] = await Promise.all([
+    // Bonus filter — scoped to branch/academicYear (not date, bonus is per-admission not per-payment)
+    const bonusAdmissionMatch = { isDeleted: false, 'bonus.amount': { $gt: 0 } };
+    if (branchFilter.branchId) bonusAdmissionMatch.branchId = branchFilter.branchId;
+    if (academicYear) bonusAdmissionMatch.academicYear = academicYear;
+
+    const [serviceRevenueResult, feeIncomeResult, opExpResult, feePaidResult, consultantCommResult, bonusResult] = await Promise.all([
       // Service Revenue = sum of serviceChargeDeducted from all payments
       Payment.aggregate([
         { $match: paymentMatch },
@@ -147,12 +152,19 @@ class DashboardService {
           { $group: { _id: null, total: { $sum: '$agentFeeDeducted' } } },
         ]),
       ]),
+
+      // College Bonus = sum of bonus.amount across admissions (offsets balancePayableToCollege)
+      Admission.aggregate([
+        { $match: bonusAdmissionMatch },
+        { $group: { _id: null, total: { $sum: '$bonus.amount' } } },
+      ]),
     ]);
 
     const serviceRevenue = serviceRevenueResult[0]?.total || 0;
     const feeIncome = feeIncomeResult[0]?.total || 0;
     const operatingExpenses = opExpResult[0]?.total || 0;
     const feePaidToCollege = feePaidResult[0]?.total || 0;
+    const totalBonus = bonusResult[0]?.total || 0;
     const consultantCommission =
       (consultantCommResult[0][0]?.total || 0) + (consultantCommResult[1][0]?.total || 0);
     const grossProfit = serviceRevenue - consultantCommission;
@@ -169,7 +181,8 @@ class DashboardService {
       feeManagement: {
         feeIncome,
         feePaidToCollege,
-        balancePayableToCollege: feeIncome - feePaidToCollege,
+        totalBonus,
+        balancePayableToCollege: Math.max(0, feeIncome - feePaidToCollege - totalBonus),
       },
     };
   }
