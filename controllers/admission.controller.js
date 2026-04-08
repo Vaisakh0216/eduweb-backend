@@ -256,6 +256,30 @@ const deleteComment = async (req, res, next) => {
   }
 };
 
+const updateBonus = async (req, res, next) => {
+  try {
+    if (req.user.role !== 'super_admin') {
+      return res.status(403).json({ success: false, message: 'Only super admin can update bonus' });
+    }
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) return res.status(404).json({ success: false, message: 'Admission not found' });
+
+    admission.bonus = {
+      amount: parseFloat(req.body.amount) || 0,
+      notes: req.body.notes || '',
+      updatedBy: req.user._id,
+      updatedAt: new Date(),
+    };
+    await admission.save();
+    await admissionService.updatePaymentSummary(req.params.id, {});
+
+    const updated = await admissionService.findById(req.params.id);
+    res.status(200).json({ success: true, data: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   findAll,
@@ -270,4 +294,5 @@ module.exports = {
   getComments,
   addComment,
   deleteComment,
+  updateBonus,
 };

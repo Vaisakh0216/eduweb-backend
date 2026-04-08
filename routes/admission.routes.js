@@ -71,6 +71,9 @@ router.delete(
   admissionController.removeDocument
 );
 
+// Bonus (super admin only — enforced in controller)
+router.patch('/:id/bonus', admissionController.updateBonus);
+
 // Comments (non-staff only — enforced in frontend; backend open to all authenticated)
 router.get('/:id/comments', admissionController.getComments);
 router.post('/:id/comments', admissionController.addComment);

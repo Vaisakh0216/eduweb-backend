@@ -340,6 +340,26 @@ const admissionSchema = new mongoose.Schema(
       },
     },
 
+    // College Bonus (Super Admin only)
+    // Not counted in P&L or cash/bank. Offsets balanceDueToCollege.
+    // College may use the Due-to-College amount as bonus, or pay it separately later.
+    bonus: {
+      amount: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      notes: {
+        type: String,
+        trim: true,
+      },
+      updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      updatedAt: Date,
+    },
+
     // Computed Payment Summary
     paymentSummary: {
       studentPaid: {
@@ -450,10 +470,11 @@ admissionSchema.pre('save', function (next) {
   // totalDueToCollege = what student paid to consultancy - service charge deducted
   // This is set by the payment service when processing payments
 
-  // Balance due to college
+  // Balance due to college (bonus offsets this — college may use it as offset or pay separately)
   this.collegePayment.balanceDueToCollege = Math.max(0,
     (this.collegePayment.totalDueToCollege || 0) -
-    (this.collegePayment.paidToCollege || 0));
+    (this.collegePayment.paidToCollege || 0) -
+    (this.bonus?.amount || 0));
 
   // Calculate student due
   this.paymentSummary.studentDue = Math.max(0,

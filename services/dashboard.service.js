@@ -22,6 +22,7 @@ class DashboardService {
       serviceRevenueSummary,
       consultantCommissionSummary,
       loanSummary,
+      bonusSummary,
     ] = await Promise.all([
       this.getFinancialBreakdown(branchFilter, dateFilter, academicYear),
       this.getAdmissionStats(branchFilter, dateFilter, academicYear),
@@ -33,6 +34,7 @@ class DashboardService {
       this.getServiceRevenueSummary(branchFilter, dateFilter, academicYear),
       this.getConsultantCommissionSummary(branchFilter, dateFilter, academicYear),
       this.getLoanSummary(branchFilter),
+      this.getBonusSummary(branchFilter, academicYear),
     ]);
 
     return {
@@ -48,6 +50,7 @@ class DashboardService {
       serviceRevenue: serviceRevenueSummary,
       consultantCommission: consultantCommissionSummary,
       loans: loanSummary,
+      bonus: user.role === ROLES.SUPER_ADMIN ? bonusSummary : null,
     };
   }
 
@@ -764,6 +767,27 @@ class DashboardService {
     }
 
     return months;
+  }
+  async getBonusSummary(branchFilter, academicYear) {
+    const matchFilter = { isDeleted: false, 'bonus.amount': { $gt: 0 } };
+    if (branchFilter.branchId) matchFilter.branchId = branchFilter.branchId;
+    if (academicYear) matchFilter.academicYear = academicYear;
+
+    const result = await Admission.aggregate([
+      { $match: matchFilter },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$bonus.amount' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return {
+      total: result[0]?.total || 0,
+      count: result[0]?.count || 0,
+    };
   }
 }
 
