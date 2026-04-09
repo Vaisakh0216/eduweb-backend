@@ -3,6 +3,7 @@ const Admission = require('../models/Admission');
 const Payment = require('../models/Payment');
 const Daybook = require('../models/Daybook');
 const Cashbook = require('../models/Cashbook');
+const ProfitPayment = require('../models/ProfitPayment');
 const { ADMISSION_STATUS, ROLES } = require('../utils/constants');
 
 class DashboardService {
@@ -37,6 +38,10 @@ class DashboardService {
       this.getBonusSummary(branchFilter, academicYear),
     ]);
 
+    const profitShare = user.role === ROLES.ADMIN
+      ? await this.getProfitShareForAdmin(user)
+      : null;
+
     return {
       financial: financialBreakdown,
       admissions: admissionStats,
@@ -51,6 +56,7 @@ class DashboardService {
       consultantCommission: consultantCommissionSummary,
       loans: loanSummary,
       bonus: user.role === ROLES.SUPER_ADMIN ? bonusSummary : null,
+      profitShare,
     };
   }
 
@@ -801,6 +807,26 @@ class DashboardService {
       total: result[0]?.total || 0,
       count: result[0]?.count || 0,
     };
+  }
+
+  async getProfitShareForAdmin(user) {
+    const percentage = user.profitShare?.percentage || 0;
+    if (!percentage) return { percentage: 0, earned: 0, totalPaid: 0, due: 0 };
+
+    const branchIds = user.branches?.map(b => b._id || b) || [];
+    const branchFilter = branchIds.length ? { branchId: { $in: branchIds } } : {};
+
+    const financial = await this.getFinancialBreakdown(branchFilter, null, null);
+    const netProfit = financial.businessProfit.netProfit;
+    const earned = Math.max(0, Math.round((netProfit * percentage) / 100));
+
+    const paidResult = await ProfitPayment.aggregate([
+      { $match: { userId: user._id } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+    const totalPaid = paidResult[0]?.total || 0;
+
+    return { percentage, earned, totalPaid, due: Math.max(0, earned - totalPaid) };
   }
 }
 

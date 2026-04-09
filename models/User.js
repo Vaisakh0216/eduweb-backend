@@ -44,6 +44,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    profitShare: {
+      percentage: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100,
+      },
+      totalPaid: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+    },
     refreshToken: {
       type: String,
       select: false,
