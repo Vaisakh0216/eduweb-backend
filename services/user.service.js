@@ -3,6 +3,7 @@ const ProfitPayment = require('../models/ProfitPayment');
 const AppError = require('../utils/AppError');
 const { getPaginationOptions, formatPaginationResponse, cleanObject } = require('../utils/helpers');
 const { ROLES } = require('../utils/constants');
+const DaybookService = require('./daybook.service');
 
 class UserService {
   async create(data, createdBy) {
@@ -139,20 +140,39 @@ class UserService {
   }
 
   async makeProfitPayment(id, data, createdBy) {
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate('branches', '_id');
     if (!user) throw new AppError('User not found', 404);
     if (user.role !== ROLES.ADMIN) throw new AppError('Profit payments are only for admin users', 400);
 
+    const branchId = data.branchId || user.branches?.[0]?._id;
+    if (!branchId) throw new AppError('No branch associated with this admin', 400);
+
+    const paymentDate = data.paymentDate ? new Date(data.paymentDate) : new Date();
+    const account = data.paymentMode === 'Bank' ? 'Bank' : 'Cash';
+
+    // Create daybook entry — this auto-creates cashbook entry + voucher
+    const daybookEntry = await DaybookService.create({
+      date: paymentDate,
+      branchId,
+      category: 'profit_share_payment',
+      transactionType: 'expense',
+      account,
+      amount: data.amount,
+      description: `Profit share payment to ${user.firstName} ${user.lastName}`,
+      remarks: data.notes,
+    }, createdBy);
+
     const payment = await ProfitPayment.create({
       userId: id,
+      branchId,
+      daybookEntryId: daybookEntry._id,
       amount: data.amount,
-      paymentDate: data.paymentDate || new Date(),
+      paymentDate,
       paymentMode: data.paymentMode || 'Cash',
       notes: data.notes,
       createdBy,
     });
 
-    // Denormalise totalPaid on user so table can display it without extra queries
     await User.findByIdAndUpdate(id, { $inc: { 'profitShare.totalPaid': data.amount } });
 
     return payment;
@@ -193,9 +213,26 @@ class UserService {
     if (!payment) throw new AppError('Payment not found', 404);
     const oldAmount = payment.amount;
     const newAmount = data.amount !== undefined ? Number(data.amount) : oldAmount;
-    Object.assign(payment, { ...data, amount: newAmount, updatedBy });
+    const newAccount = data.paymentMode === 'Bank' ? 'Bank' : 'Cash';
+
+    // Sync linked daybook entry
+    if (payment.daybookEntryId) {
+      await DaybookService.update(payment.daybookEntryId.toString(), {
+        amount: newAmount,
+        account: newAccount,
+        date: data.paymentDate ? new Date(data.paymentDate) : payment.paymentDate,
+        remarks: data.notes,
+      }, updatedBy);
+    }
+
+    Object.assign(payment, {
+      amount: newAmount,
+      paymentMode: data.paymentMode || payment.paymentMode,
+      paymentDate: data.paymentDate ? new Date(data.paymentDate) : payment.paymentDate,
+      notes: data.notes !== undefined ? data.notes : payment.notes,
+    });
     await payment.save();
-    // Sync totalPaid on user
+
     const diff = newAmount - oldAmount;
     if (diff !== 0) {
       await User.findByIdAndUpdate(payment.userId, { $inc: { 'profitShare.totalPaid': diff } });
@@ -206,6 +243,12 @@ class UserService {
   async deleteProfitPayment(paymentId) {
     const payment = await ProfitPayment.findById(paymentId);
     if (!payment) throw new AppError('Payment not found', 404);
+
+    // Delete linked daybook entry (also removes cashbook + voucher)
+    if (payment.daybookEntryId) {
+      await DaybookService.delete(payment.daybookEntryId.toString(), payment.userId);
+    }
+
     await payment.deleteOne();
     await User.findByIdAndUpdate(payment.userId, { $inc: { 'profitShare.totalPaid': -payment.amount } });
     return true;

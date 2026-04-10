@@ -7,6 +7,14 @@ const profitPaymentSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'User is required'],
     },
+    branchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Branch',
+    },
+    daybookEntryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Daybook',
+    },
     amount: {
       type: Number,
       required: [true, 'Amount is required'],

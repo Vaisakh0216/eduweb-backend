@@ -117,6 +117,7 @@ module.exports = {
     'capital_withdrawal_owner',
     'capital_withdrawal_partner',
     'internal_transfer',
+    'profit_share_payment',
   ],
 
   DAYBOOK_CATEGORIES_CONFIG: {
@@ -156,6 +157,7 @@ module.exports = {
     capital_withdrawal_owner: { type: 'expense' },
     capital_withdrawal_partner: { type: 'expense' },
     internal_transfer: { type: 'transfer' },
+    profit_share_payment: { type: 'expense' },
   },
 
   JOURNAL_TYPES: {
