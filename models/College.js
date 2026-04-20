@@ -71,7 +71,6 @@ const collegeSchema = new mongoose.Schema(
 );
 
 collegeSchema.index({ name: 'text' });
-collegeSchema.index({ code: 1 });
 collegeSchema.index({ isActive: 1, isDeleted: 1 });
 
 collegeSchema.pre(/^find/, function (next) {

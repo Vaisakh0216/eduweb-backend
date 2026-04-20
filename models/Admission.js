@@ -506,7 +506,6 @@ admissionSchema.virtual('studentFullName').get(function () {
 });
 
 // Indexes
-admissionSchema.index({ admissionNo: 1 });
 admissionSchema.index({ branchId: 1 });
 admissionSchema.index({ admissionStatus: 1 });
 admissionSchema.index({ admissionDate: -1 });

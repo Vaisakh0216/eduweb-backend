@@ -80,7 +80,6 @@ const voucherSchema = new mongoose.Schema(
 );
 
 // Indexes
-voucherSchema.index({ voucherNo: 1 });
 voucherSchema.index({ branchId: 1 });
 voucherSchema.index({ voucherDate: -1 });
 voucherSchema.index({ voucherType: 1 });

@@ -66,7 +66,6 @@ const branchSchema = new mongoose.Schema(
   }
 );
 
-branchSchema.index({ code: 1 });
 branchSchema.index({ isActive: 1, isDeleted: 1 });
 
 branchSchema.pre(/^find/, function (next) {
