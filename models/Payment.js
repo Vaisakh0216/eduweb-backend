@@ -51,7 +51,6 @@ const paymentSchema = new mongoose.Schema(
     },
     transactionRef: {
       type: String,
-      sparse: true,
       trim: true,
     },
     notes: String,

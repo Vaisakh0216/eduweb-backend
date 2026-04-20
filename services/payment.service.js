@@ -853,45 +853,49 @@ class PaymentService {
       const account = data.account || "Cash";
 
       const existingDaybookEntry = await Daybook.findOne({ paymentId: payment._id });
-      if (!existingDaybookEntry) {
-        await Daybook.create({
+      if (existingDaybookEntry) {
+        throw new AppError("A daybook entry already exists for this payment", 409);
+      }
+
+      await Daybook.create({
+        date: payment.paymentDate,
+        branchId: data.branchId,
+        category,
+        transactionType: DAYBOOK_TYPES.INCOME,
+        account,
+        amount: data.amount,
+        description,
+        admissionId: data.admissionId,
+        paymentId: payment._id,
+        voucherId: voucher._id,
+        remarks,
+        createdBy,
+      });
+
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
+        const existingCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
+        if (existingCashbookEntry) {
+          throw new AppError("A cashbook entry already exists for this voucher", 409);
+        }
+
+        const lastEntry = await Cashbook.findOne({
+          branchId: data.branchId,
+        }).sort({ date: -1, createdAt: -1 });
+
+        const runningBalance = (lastEntry?.runningBalance || 0) + data.amount;
+
+        await Cashbook.create({
           date: payment.paymentDate,
           branchId: data.branchId,
           category,
-          transactionType: DAYBOOK_TYPES.INCOME,
-          account,
-          amount: data.amount,
-          description,
-          admissionId: data.admissionId,
-          paymentId: payment._id,
+          description: `Received from ${data.payerType}: ${admission.student.firstName} ${admission.student.lastName}`,
+          credited: data.amount,
+          debited: 0,
+          runningBalance,
           voucherId: voucher._id,
-          remarks,
           createdBy,
         });
-
-        // Update cashbook only when account is Cash
-        if (account === "Cash") {
-          const existingCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
-          if (!existingCashbookEntry) {
-            const lastEntry = await Cashbook.findOne({
-              branchId: data.branchId,
-            }).sort({ date: -1, createdAt: -1 });
-
-            const runningBalance = (lastEntry?.runningBalance || 0) + data.amount;
-
-            await Cashbook.create({
-              date: payment.paymentDate,
-              branchId: data.branchId,
-              category,
-              description: `Received from ${data.payerType}: ${admission.student.firstName} ${admission.student.lastName}`,
-              credited: data.amount,
-              debited: 0,
-              runningBalance,
-              voucherId: voucher._id,
-              createdBy,
-            });
-          }
-        }
       }
     }
 
@@ -903,44 +907,48 @@ class PaymentService {
       const account = data.account || "Cash";
 
       const existingCollegeDaybookEntry = await Daybook.findOne({ paymentId: payment._id });
-      if (!existingCollegeDaybookEntry) {
-        await Daybook.create({
+      if (existingCollegeDaybookEntry) {
+        throw new AppError("A daybook entry already exists for this payment", 409);
+      }
+
+      await Daybook.create({
+        date: payment.paymentDate,
+        branchId: data.branchId,
+        category: "paid_to_college",
+        transactionType: DAYBOOK_TYPES.EXPENSE,
+        account,
+        amount: data.amount,
+        description: `Paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
+        admissionId: data.admissionId,
+        paymentId: payment._id,
+        voucherId: voucher._id,
+        createdBy,
+      });
+
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
+        const existingCollegeCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
+        if (existingCollegeCashbookEntry) {
+          throw new AppError("A cashbook entry already exists for this voucher", 409);
+        }
+
+        const lastEntry = await Cashbook.findOne({
+          branchId: data.branchId,
+        }).sort({ date: -1, createdAt: -1 });
+
+        const runningBalance = (lastEntry?.runningBalance || 0) - data.amount;
+
+        await Cashbook.create({
           date: payment.paymentDate,
           branchId: data.branchId,
           category: "paid_to_college",
-          transactionType: DAYBOOK_TYPES.EXPENSE,
-          account,
-          amount: data.amount,
           description: `Paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
-          admissionId: data.admissionId,
-          paymentId: payment._id,
+          credited: 0,
+          debited: data.amount,
+          runningBalance,
           voucherId: voucher._id,
           createdBy,
         });
-
-        // Update cashbook only when account is Cash
-        if (account === "Cash") {
-          const existingCollegeCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
-          if (!existingCollegeCashbookEntry) {
-            const lastEntry = await Cashbook.findOne({
-              branchId: data.branchId,
-            }).sort({ date: -1, createdAt: -1 });
-
-            const runningBalance = (lastEntry?.runningBalance || 0) - data.amount;
-
-            await Cashbook.create({
-              date: payment.paymentDate,
-              branchId: data.branchId,
-              category: "paid_to_college",
-              description: `Paid to college for ${admission.student.firstName} ${admission.student.lastName}`,
-              credited: 0,
-              debited: data.amount,
-              runningBalance,
-              voucherId: voucher._id,
-              createdBy,
-            });
-          }
-        }
       }
     }
 
@@ -959,44 +967,48 @@ class PaymentService {
       const account = data.account || "Cash";
 
       const existingAgentDaybookEntry = await Daybook.findOne({ paymentId: payment._id });
-      if (!existingAgentDaybookEntry) {
-        await Daybook.create({
+      if (existingAgentDaybookEntry) {
+        throw new AppError("A daybook entry already exists for this payment", 409);
+      }
+
+      await Daybook.create({
+        date: payment.paymentDate,
+        branchId: data.branchId,
+        category: "paid_to_agent",
+        transactionType: DAYBOOK_TYPES.EXPENSE,
+        account,
+        amount: data.amount,
+        description: `Agent fee paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
+        admissionId: data.admissionId,
+        paymentId: payment._id,
+        voucherId: voucher._id,
+        createdBy,
+      });
+
+      // Update cashbook only when account is Cash
+      if (account === "Cash") {
+        const existingAgentCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
+        if (existingAgentCashbookEntry) {
+          throw new AppError("A cashbook entry already exists for this voucher", 409);
+        }
+
+        const lastEntry = await Cashbook.findOne({
+          branchId: data.branchId,
+        }).sort({ date: -1, createdAt: -1 });
+
+        const runningBalance = (lastEntry?.runningBalance || 0) - data.amount;
+
+        await Cashbook.create({
           date: payment.paymentDate,
           branchId: data.branchId,
           category: "paid_to_agent",
-          transactionType: DAYBOOK_TYPES.EXPENSE,
-          account,
-          amount: data.amount,
-          description: `Agent fee paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
-          admissionId: data.admissionId,
-          paymentId: payment._id,
+          description: `Paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
+          credited: 0,
+          debited: data.amount,
+          runningBalance,
           voucherId: voucher._id,
           createdBy,
         });
-
-        // Update cashbook only when account is Cash
-        if (account === "Cash") {
-          const existingAgentCashbookEntry = await Cashbook.findOne({ voucherId: voucher._id });
-          if (!existingAgentCashbookEntry) {
-            const lastEntry = await Cashbook.findOne({
-              branchId: data.branchId,
-            }).sort({ date: -1, createdAt: -1 });
-
-            const runningBalance = (lastEntry?.runningBalance || 0) - data.amount;
-
-            await Cashbook.create({
-              date: payment.paymentDate,
-              branchId: data.branchId,
-              category: "paid_to_agent",
-              description: `Paid to ${agentName} for ${admission.student.firstName} ${admission.student.lastName}`,
-              credited: 0,
-              debited: data.amount,
-              runningBalance,
-              voucherId: voucher._id,
-              createdBy,
-            });
-          }
-        }
       }
     }
 
