@@ -200,6 +200,7 @@ daybookSchema.index({ date: -1 });
 daybookSchema.index({ branchId: 1 });
 daybookSchema.index({ category: 1 });
 daybookSchema.index({ isDeleted: 1 });
+daybookSchema.index({ paymentId: 1 }, { unique: true, sparse: true });
 
 daybookSchema.pre(/^find/, function (next) {
   if (!this.getOptions().includeDeleted) {
